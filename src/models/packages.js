@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Order extends Model {
+    class Package extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(PackageFeature, { foreignKey: 'package_id' })
         }
     }
-    Order.init({
+    Package.init({
         period: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -34,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        tableName: 'orders',
-        modelName: 'Order',
+        tableName: 'packages',
+        modelName: 'Package',
     });
-    return Order;
+    return Package;
 };

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node ./src/server",
-    "dev":" nodemon ./src/server",
+    "start":"node --env-file .env ./src/server",
+    "dev":" nodemon --env-file .env ./src/server",
     "migrate":"sequelize db:migrate",
     "undo":"sequelize db:migrate:undo"
   },

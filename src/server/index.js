@@ -7,9 +7,12 @@ async function getTables() {
     await sequelize.authenticate()
 }
 
-app.listen(8080, async () => {
+
+const PORT = process.env.PORT
+
+app.listen(PORT, async () => {
     getTables();
-    console.log("app is listening on port 8080")
+    console.log("app is listening on port 8080");
 })
 
 
