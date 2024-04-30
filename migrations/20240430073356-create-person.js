@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('person', {
+    await queryInterface.createTable('persons', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -42,7 +42,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('admin', {
+    await queryInterface.createTable('admins', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -56,7 +56,7 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
         references: {
-          model: "person",
+          model: "persons",
           key: "id"
         }
       },
@@ -93,7 +93,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('permission', {
+    await queryInterface.createTable('permissions', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -107,7 +107,7 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
         references: {
-          model: "person",
+          model: "persons",
           key: "id",
         }
       },
@@ -135,7 +135,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('client', {
+    await queryInterface.createTable('clients', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -149,7 +149,7 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
         references: {
-          model: "person",
+          model: "persons",
           key: "id",
         }
       },
@@ -176,10 +176,10 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('person');
-    await queryInterface.dropTable('admin');
-    await queryInterface.dropTable('permission');
-    await queryInterface.dropTable('client');
+    await queryInterface.dropTable('persons');
+    await queryInterface.dropTable('admins');
+    await queryInterface.dropTable('permissions');
+    await queryInterface.dropTable('clients');
     
   }
 };

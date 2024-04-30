@@ -3,37 +3,31 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Client extends Model {
+  class Admin extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Person }) {
+    static associate({ Person , Permission}) {
       // define association here
       this.belongsTo(Person , { foreignKey : 'person_id'})
+      this.hasOne(Permission , { foreignKey : 'admin_id'})
 
     }
   }
-  Client.init({
+  Admin.init({
 
 
-    goal: {
-      type: DataTypes.ENUM('lose_fat','lose_weight', 'gain_muscle' , 'gain_weight' , 'maintain' ),
+    role: {
+      type: DataTypes.ENUM('super_admin', 'admin'),
       allowNull: false,
     },
-    tall: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    weight: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
+
   }, {
     sequelize,
-    tableName: 'client',
-    modelName: 'Client',
+    tableName: 'admins',
+    modelName: 'Admin',
   });
-  return Client;
+  return Admin;
 };
