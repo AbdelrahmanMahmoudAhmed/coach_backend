@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     ItemOrder.init({
-
         order_id: {
             allowNull: false,
             type: DataTypes.INTEGER,

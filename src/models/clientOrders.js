@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     ClientOrder.init({
-
         order_id: {
             allowNull: false,
             type: DataTypes.INTEGER,

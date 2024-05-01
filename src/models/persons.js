@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(Client , { foreignKey : 'person_id'})
     }
   }
+  
   Person.init({
 
     name: {

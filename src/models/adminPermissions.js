@@ -16,7 +16,17 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Permission.init({
-
+        admin_id: {
+            allowNull: false,
+            type: DataTypes.INTEGER,
+            unique:true,
+            onDelete:'CASCADE',
+            onUpdate:'CASCADE',
+            references: {
+              model: "admins",
+              key: "id",
+            }
+          },
         allow_edit: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,

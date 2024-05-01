@@ -12,8 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         static associate({Package }) {
             // define association here
             this.belongsTo(Package, { foreignKey: 'package_id' })
-
-
         }
     }
     PackageFeature.init({

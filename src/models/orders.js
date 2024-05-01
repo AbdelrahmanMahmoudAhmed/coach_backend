@@ -18,9 +18,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Order.init({
-
-
-
         type:{
             type: DataTypes.ENUM('product', 'package'),
             allowNull: false,

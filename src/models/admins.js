@@ -17,7 +17,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Admin.init({
-
+    person_id: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      unique:true,
+      onDelete:'CASCADE',
+      onUpdate:'CASCADE',
+      references: {
+        model: "persons",
+        key: "id",
+      }
+    },
 
     role: {
       type: DataTypes.ENUM('super_admin', 'admin'),

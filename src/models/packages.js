@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(PackageFeature, { foreignKey: 'package_id' })
         }
     }
+    
     Package.init({
         period: {
             type: DataTypes.INTEGER,

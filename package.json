@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node --env-file .env ./src/server",
-    "dev":" nodemon --env-file .env ./src/server",
-    "migrate":"sequelize db:migrate",
-    "undo":"sequelize db:migrate:undo"
+    "start": "node --env-file .env ./src/server",
+    "dev": " nodemon --env-file .env ./src/server",
+    "migrate": "sequelize db:migrate",
+    "undo": "sequelize db:migrate:undo"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.7",
     "nodemon": "^3.1.0",
     "sequelize": "^6.37.3",

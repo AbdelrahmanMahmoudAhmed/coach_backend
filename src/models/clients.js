@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(Person , { foreignKey : 'person_id'})
       this.hasMany(ClientOrder , { foreignKey : 'client_id'})
-
     }
   }
   Client.init({
