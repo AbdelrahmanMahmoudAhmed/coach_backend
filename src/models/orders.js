@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({ ItemOrder, PackageOrder , ProductOrder , ClientOrder }) {
             // define association here
-            this.hasMany(ItemOrder, { foreignKey: 'order_id' });
-            this.hasMany(ClientOrder , { foreignKey : 'order_id'})
-            this.hasOne(PackageOrder, { foreignKey: 'order_id' });
-            this.hasOne(ProductOrder, { foreignKey: 'order_id' });
+            this.hasMany(ItemOrder, { foreignKey: 'orderId' });
+            this.hasMany(ClientOrder , { foreignKey : 'orderId'})
+            this.hasOne(PackageOrder, { foreignKey: 'orderId' });
+            this.hasOne(ProductOrder, { foreignKey: 'orderId' });
         }
     }
     Order.init({
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('product', 'package'),
             allowNull: false,
         },
-        is_paid:{
+        isPaid:{
             type: DataTypes.BOOLEAN,
             defaultValue:false,
             allowNull: false,

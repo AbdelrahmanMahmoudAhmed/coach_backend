@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({ Admin  }) {
             // define association here
-            this.belongsTo(Admin, { foreignKey: 'admin_id' })
+            this.belongsTo(Admin, { foreignKey: 'adminId' })
 
         }
     }
     Permission.init({
-        admin_id: {
+        adminId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique:true,
@@ -27,17 +27,17 @@ module.exports = (sequelize, DataTypes) => {
               key: "id",
             }
           },
-        allow_edit: {
+        allowEdit: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false,
         },
-        allow_delete: {
+        allowDelete: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false,
         },
-        allow_manage_website: {
+        allowManageWebsite: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false,

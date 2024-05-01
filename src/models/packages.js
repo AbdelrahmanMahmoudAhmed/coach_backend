@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({Item , PackageFeature }) {
             // define association here
-            this.belongsTo(Item, { foreignKey: 'item_id' })
-            this.hasMany(PackageFeature, { foreignKey: 'package_id' })
+            this.belongsTo(Item, { foreignKey: 'itemId' })
+            this.hasMany(PackageFeature, { foreignKey: 'packageId' })
         }
     }
     
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
 
-        item_id: {
+        itemId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique: true,

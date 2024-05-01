@@ -16,25 +16,25 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        question_ar: {
+        questionAr: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        question_en: {
+        questionEn: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        answer_ar: {
+        answerAr: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        answer_en: {
+        answerEn: {
             type: DataTypes.STRING,
             allowNull: false,
         },
     }, {
         sequelize,
-        tableName: 'quick_answers',
+        tableName: 'quickAnswers',
         modelName: 'QuickAnswer',
     });
     return QuickAnswer;

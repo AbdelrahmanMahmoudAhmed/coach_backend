@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Admin , Client }) {
       // define association here
-      this.hasOne(Admin , { foreignKey : 'person_id'})
-      this.hasOne(Client , { foreignKey : 'person_id'})
+      this.hasOne(Admin , { foreignKey : 'personId'})
+      this.hasOne(Client , { foreignKey : 'personId'})
     }
   }
   

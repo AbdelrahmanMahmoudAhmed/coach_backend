@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({ Item }) {
             // define association here
-            this.belongsTo(Item, { foreignKey: 'item_id' })
+            this.belongsTo(Item, { foreignKey: 'itemId' })
 
         }
         
@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     Product.init({
 
 
-        shipping_price: {
+        shippingPrice: {
             type: DataTypes.DECIMAL,
             defaultValue: 0,
         },
-        item_id: {
+        itemId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique: true,

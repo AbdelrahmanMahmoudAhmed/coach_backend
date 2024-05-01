@@ -11,15 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Person , ClientOrder }) {
       // define association here
-      this.belongsTo(Person , { foreignKey : 'person_id'})
-      this.hasMany(ClientOrder , { foreignKey : 'client_id'})
+      this.belongsTo(Person , { foreignKey : 'personId'})
+      this.hasMany(ClientOrder , { foreignKey : 'clientId'})
     }
   }
   Client.init({
 
 
     goal: {
-      type: DataTypes.ENUM('lose_fat','lose_weight', 'gain_muscle' , 'gain_weight' , 'maintain' ),
+      type: DataTypes.ENUM('loseFat','loseWeight', 'gainMuscle' , 'gainWeight' , 'maintain' ),
       allowNull: false,
     },
     tall: {

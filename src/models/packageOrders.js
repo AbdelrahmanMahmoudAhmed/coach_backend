@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({ Order }) {
             // define association here
-            this.belongsTo(Order, { foreignKey: 'order_id' })
+            this.belongsTo(Order, { foreignKey: 'orderId' })
 
         }
     }
@@ -21,31 +21,31 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('ordered','pending', 'ready' ,'started' , 'progress' , 'finished'),
             allowNull: false,
         },
-        diet_plan_ar: {
+        dietPlanAr: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        diet_plan_en: {
+        dietPlanEn: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        supplements_ar: {
+        supplementsAr: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        supplements_en: {
+        supplementsEn: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        training_ar: {
+        trainingAr: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        training_en: {
+        trainingEn: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        order_id: {
+        orderId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique: true,
@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
 
     }, {
         sequelize,
-        tableName: 'package_orders',
+        tableName: 'packageOrders',
         modelName: 'PackageOrder',
     });
     return PackageOrder;

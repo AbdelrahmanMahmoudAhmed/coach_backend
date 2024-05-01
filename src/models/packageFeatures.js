@@ -11,20 +11,20 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({Package }) {
             // define association here
-            this.belongsTo(Package, { foreignKey: 'package_id' })
+            this.belongsTo(Package, { foreignKey: 'packageId' })
         }
     }
     PackageFeature.init({
 
-        feature_ar: {
+        featureAr: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        feature_en: {
+        featureEn: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        package_id: {
+        packageId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique: true,
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 
     }, {
         sequelize,
-        tableName: 'package_features',
+        tableName: 'packageFeatures',
         modelName: 'PackageFeature',
     });
     return PackageFeature;

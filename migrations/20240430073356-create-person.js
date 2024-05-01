@@ -50,7 +50,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      person_id: {
+      personId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -101,7 +101,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      admin_id: {
+      adminId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -112,17 +112,17 @@ module.exports = {
           key: "id",
         }
       },
-      allow_edit: {
+      allowEdit: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
-      allow_delete: {
+      allowDelete: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
-      allow_manage_website: {
+      allowManageWebsite: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
@@ -143,7 +143,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      person_id: {
+      personId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -155,7 +155,7 @@ module.exports = {
         }
       },
       goal: {
-        type: Sequelize.ENUM('lose_fat', 'lose_weight', 'gain_muscle', 'gain_weight', 'maintain'),
+        type: Sequelize.ENUM('loseFat', 'loseWeight', 'gainMuscle', 'gainWeight', 'maintain'),
         allowNull: false,
       },
       tall: {
@@ -187,7 +187,7 @@ module.exports = {
         type: Sequelize.ENUM('product', 'package'),
         allowNull: false,
       },
-      is_paid: {
+      isPaid: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
@@ -212,7 +212,7 @@ module.exports = {
         type: Sequelize.ENUM('product', 'package'),
         allowNull: false,
       },
-      discount_percentage: {
+      discountPercentage: {
         type: Sequelize.DECIMAL,
         defaultValue: 0,
       },
@@ -220,19 +220,19 @@ module.exports = {
         type: Sequelize.DECIMAL,
         defaultValue: 0,
       },
-      title_ar: {
+      titleAr: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      title_en: {
+      titleEn: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      description_ar: {
+      descriptionAr: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      description_en: {
+      descriptionEn: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -249,14 +249,14 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('client_orders', {
+    await queryInterface.createTable('clientOrders', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      order_id: {
+      orderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -267,7 +267,7 @@ module.exports = {
           key: "id",
         }
       },
-      client_id: {
+      clientId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -287,7 +287,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('product_orders', {
+    await queryInterface.createTable('productOrders', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -298,7 +298,7 @@ module.exports = {
         type: Sequelize.ENUM('ordered', 'prepared', 'shipped', 'arrived'),
         allowNull: false,
       },
-      order_id: {
+      orderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -318,7 +318,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('package_orders', {
+    await queryInterface.createTable('packageOrders', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -329,31 +329,31 @@ module.exports = {
         type: Sequelize.ENUM('ordered', 'pending', 'ready', 'started', 'progress', 'finished'),
         allowNull: false,
       },
-      diet_plan_ar: {
+      dietPlanAr: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      diet_plan_en: {
+      dietPlanEn: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      supplements_ar: {
+      supplementsAr: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      supplements_en: {
+      supplementsEn: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      training_ar: {
+      trainingAr: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      training_en: {
+      trainingEn: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      order_id: {
+      orderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -373,14 +373,14 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('item_orders', {
+    await queryInterface.createTable('itemOrders', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      order_id: {
+      orderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -391,7 +391,7 @@ module.exports = {
           key: "id",
         }
       },
-      item_id: {
+      itemId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -423,7 +423,7 @@ module.exports = {
         allowNull: false,
       },
 
-      item_id: {
+      itemId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -450,11 +450,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      shipping_price: {
+      shippingPrice: {
         type: Sequelize.DECIMAL,
         defaultValue: 0,
       },
-      item_id: {
+      itemId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -474,22 +474,22 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('package_features', {
+    await queryInterface.createTable('packageFeatures', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      feature_ar: {
+      featureAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      feature_en: {
+      featureEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      package_id: {
+      packageId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
@@ -545,19 +545,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
 
-      title_ar: {
+      titleAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      title_en: {
+      titleEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      content_ar: {
+      contentAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      content_en: {
+      contentEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -590,11 +590,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description_ar: {
+      descriptionAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description_en: {
+      descriptionEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -607,26 +607,26 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('quick_answers', {
+    await queryInterface.createTable('quickAnswers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      question_ar: {
+      questionAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      question_en: {
+      questionEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      answer_ar: {
+      answerAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      answer_en: {
+      answerEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -646,19 +646,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title_ar: {
+      titleAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      title_en: {
+      titleEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      content_ar: {
+      contentAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      content_en: {
+      contentEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -675,7 +675,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('contact_us', {
+    await queryInterface.createTable('contactUs', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -723,11 +723,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description_ar: {
+      descriptionAr: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description_en: {
+      descriptionEn: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -752,11 +752,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description_ar: {
+      descriptionAr: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      description_en: {
+      descriptionEn: {
         type: Sequelize.STRING,
         allowNull: true,
       },
@@ -779,21 +779,21 @@ module.exports = {
     await queryInterface.dropTable('clients');
 
     await queryInterface.dropTable('orders');
-    await queryInterface.dropTable('client_orders');
-    await queryInterface.dropTable('product_orders');
-    await queryInterface.dropTable('package_orders');
-    await queryInterface.dropTable('item_orders');
+    await queryInterface.dropTable('clientOrders');
+    await queryInterface.dropTable('productOrders');
+    await queryInterface.dropTable('packageOrders');
+    await queryInterface.dropTable('itemOrders');
     await queryInterface.dropTable('items');
     await queryInterface.dropTable('products');
     await queryInterface.dropTable('packages');
-    await queryInterface.dropTable('package_features');
+    await queryInterface.dropTable('packageFeatures');
     //website
     await queryInterface.dropTable('settings');
     await queryInterface.dropTable('blogs');
     await queryInterface.dropTable('videos');
-    await queryInterface.dropTable('quick_answers');
+    await queryInterface.dropTable('quickAnswers');
     await queryInterface.dropTable('certifications');
-    await queryInterface.dropTable('contact_us');
+    await queryInterface.dropTable('contactUs');
     await queryInterface.dropTable('testimonials');
     await queryInterface.dropTable('transformations');
   }

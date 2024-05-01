@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({ Product, Package, ItemOrder }) {
             // define association here
-            this.hasMany(ItemOrder, { foreignKey: 'item_id' })
-            this.hasOne(Product, { foreignKey: 'item_id' })
-            this.hasOne(Package, { foreignKey: 'item_id' })
+            this.hasMany(ItemOrder, { foreignKey: 'itemId' })
+            this.hasOne(Product, { foreignKey: 'itemId' })
+            this.hasOne(Package, { foreignKey: 'itemId' })
 
         }
     }
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('product', 'package'),
             allowNull: false,
         },
-        discount_percentage: {
+        discountPercentage: {
             type: DataTypes.DECIMAL,
             defaultValue: 0,
         },
@@ -30,19 +30,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL,
             defaultValue: 0,
         },
-        title_ar: {
+        titleAr: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        title_en: {
+        titleEn: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description_ar: {
+        descriptionAr: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description_en: {
+        descriptionEn: {
             type: DataTypes.STRING,
             allowNull: false
         },

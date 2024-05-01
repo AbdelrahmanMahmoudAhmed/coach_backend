@@ -16,19 +16,19 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        title_ar: {
+        titleAr: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        title_en: {
+        titleEn: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        content_ar: {
+        contentAr: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        content_en: {
+        contentEn: {
             type: DataTypes.STRING,
             allowNull: false,
         },

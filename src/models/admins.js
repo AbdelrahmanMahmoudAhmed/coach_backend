@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Person , Permission}) {
       // define association here
-      this.belongsTo(Person , { foreignKey : 'person_id'})
-      this.hasOne(Permission , { foreignKey : 'admin_id'})
+      this.belongsTo(Person , { foreignKey : 'personId'})
+      this.hasOne(Permission , { foreignKey : 'adminId'})
 
     }
   }
   Admin.init({
-    person_id: {
+    personId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       unique:true,
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     role: {
-      type: DataTypes.ENUM('super_admin', 'admin'),
+      type: DataTypes.ENUM('superAdmin', 'admin'),
       allowNull: false,
     },
 

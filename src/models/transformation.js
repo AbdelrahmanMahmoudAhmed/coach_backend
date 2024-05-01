@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description_ar: {
+        descriptionAr: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        description_en: {
+        descriptionEn: {
             type: DataTypes.STRING,
             allowNull: true,
         },
