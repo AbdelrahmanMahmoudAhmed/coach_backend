@@ -1,24 +1,22 @@
+const { addQuickAnswer , getAllQuickAnswer , deleteQuickAnswer} = require('../controller/quickAnswers')
+
 const express = require('express');
 
-const { sequelize, QuickAnswer } = require('../../models')
-// const { body } = require('express-validator/check');
+const { sequelize, QuickAnswer } = require('../../models');
 
-// const feedController = require('../controllers/feed');
+const { body } = require('express-validator');
 
 
 const router = express.Router();
 
 // GET  (/quick_answers) 
-router.post('/', (req, res, next) => {
-    QuickAnswer.create({ question_ar: "saasd", question_en: "dfgdfg", answer_ar: "ertetr", answer_en: "ertet", created_at: "2023-11-11 00:00:00", updated_at: "2023-11-11 00:00:00" })
-    .then((data) => {
-        res.json(data)
-    })
-    .catch((err)=>{
-        console.log("err" , err)
-    })
-   
-});
+router.get('/', getAllQuickAnswer );
+// POST  (/quick_answers) 
+
+router.post('/', addQuickAnswer);
+// DELETE  (/quick_answers) 
+
+router.delete('/:id', deleteQuickAnswer);
 
 
 

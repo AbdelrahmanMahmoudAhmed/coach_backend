@@ -10,6 +10,8 @@ const PORT = process.env.PORT
 
 /* ------------------------------- Middlewares ------------------------------- */
 
+app.use(bodyParser.json()); // application/json
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
@@ -35,7 +37,7 @@ async function getTables() {
 
 app.listen(PORT, async () => {
     getTables();
-    console.log("app is listening on port 8080");
+    console.log(`app is listening on port ${ PORT } `);
 })
 
 
