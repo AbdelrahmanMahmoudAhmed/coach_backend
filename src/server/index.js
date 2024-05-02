@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { sequelize } = require('../models');
 const setupApiRouters = require('./routes');
+const errorMiddleware = require('./middleware/errorHandling')
 const app = express();
 
 const PORT = process.env.PORT
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
     next();
 });
 
+/* ---------------------------------- Error Handling --------------------------------- */
+  errorMiddleware(app);
 
 /* --------------------------------- Router --------------------------------- */
 setupApiRouters(app);
