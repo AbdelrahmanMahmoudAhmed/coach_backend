@@ -1,10 +1,14 @@
 const express = require('express')
 const path = require('path');
 const bodyParser = require('body-parser');
+const multer  = require('multer')
 const { sequelize } = require('../models');
 const setupApiRouters = require('./routes');
-const errorMiddleware = require('./middleware/errorHandling')
+const errorMiddleware = require('./middleware/errorHandler')
 const app = express();
+const multerMW = multer();
+
+
 
 const PORT = process.env.PORT
 
@@ -12,6 +16,9 @@ const PORT = process.env.PORT
 /* ------------------------------- Middlewares ------------------------------- */
 
 app.use(bodyParser.json()); // application/json
+
+app.use(multerMW.any()); // Middleware to parse form data
+
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -23,8 +30,6 @@ app.use((req, res, next) => {
     next();
 });
 
-/* ---------------------------------- Error Handling --------------------------------- */
-  errorMiddleware(app);
 
 /* --------------------------------- Router --------------------------------- */
 setupApiRouters(app);
@@ -35,6 +40,9 @@ async function getTables() {
     await sequelize.authenticate()
 };
 
+/* ---------------------------------- Error Handling --------------------------------- */
+
+app.use(errorMiddleware)
 
 
 

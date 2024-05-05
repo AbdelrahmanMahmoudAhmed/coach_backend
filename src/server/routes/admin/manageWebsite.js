@@ -13,7 +13,6 @@ const router = express.Router();
 router.post('/quick-answer',addQuickAnswerValidation, addQuickAnswer);
 // DELETE  (/quick_answers) 
 router.delete('/quick-answer/:id', deleteQuickAnswer);
-
 // PATCH  (/quick_answers) 
 router.patch('/quick-answer/:id', updateQuickAnswerValidation  ,updateQuickAnswer);
 

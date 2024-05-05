@@ -5,6 +5,8 @@ const addQuickAnswerValidation =  checkSchema({
 
     questionAr: {
         in: ['body'],
+        optional:false,
+        trim:true,
         isLength: {
             options: { min: 6 },
             errorMessage: 'the question must be at least 6 characters'
@@ -12,6 +14,8 @@ const addQuickAnswerValidation =  checkSchema({
     },
     questionEn: {
         in: ['body'],
+        optional:false,
+        trim:true,
         isLength: {
             options: { min: 6 },
             errorMessage: 'the question must be at least 6 characters'
@@ -19,6 +23,8 @@ const addQuickAnswerValidation =  checkSchema({
     },
     answerAr: {
         in: ['body'],
+        optional:false,
+        trim:true,
         isLength: {
             options: { min: 10 },
             errorMessage: 'the answer must be at least 10 characters'
@@ -26,6 +32,8 @@ const addQuickAnswerValidation =  checkSchema({
     },
     answerEn: {
         in: ['body'],
+        optional:false,
+        trim:true,
         isLength: {
             options: { min: 10 },
             errorMessage: 'the answer must be at least 10 characters'
@@ -46,6 +54,7 @@ const updateQuickAnswerValidation =  checkSchema({
     questionAr: {
         in: ['body'],
         optional: true,
+        trim:true,
         isLength: {
             options: { min: 6 },
             errorMessage: 'the question must be at least 6 characters'
@@ -54,6 +63,7 @@ const updateQuickAnswerValidation =  checkSchema({
     questionEn: {
         in: ['body'],
         optional: true,
+        trim:true,
         isLength: {
             options: { min: 6 },
             errorMessage: 'the question must be at least 6 characters'
@@ -62,6 +72,7 @@ const updateQuickAnswerValidation =  checkSchema({
     answerAr: {
         in: ['body'],
         optional: true,
+        trim:true,
         isLength: {
             options: { min: 10 },
             errorMessage: 'the answer must be at least 10 characters'
@@ -70,6 +81,7 @@ const updateQuickAnswerValidation =  checkSchema({
     answerEn: {
         in: ['body'],
         optional: true,
+        trim:true,
         isLength: {
             options: { min: 10 },
             errorMessage: 'the answer must be at least 10 characters'

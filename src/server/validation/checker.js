@@ -1,25 +1,16 @@
-const { validationResult } = require('express-validator');
-
+const { validationResult } = require("express-validator");
+const { createAppError } = require("../utils/error");
+const { HttpStatus } = require("../utils/httpCodes");
 
 const validationChecker = async (req, res) => {
-    const errors = validationResult(req);
+  const errors = validationResult(req);
 
-    // Check for validation errors
-    if (!errors.isEmpty()) {
-        // Respond with 400 status code and validation errors
-        throw {
-            message: "validation error",
-            status: false,
-            code: 0,
-            errors: errors.array()
-        };
-    }else{
-       
-        return true
-    }
-}
+  // Check for validation errors
+  if (!errors.isEmpty()) {
+    throw createAppError(errors.array(), HttpStatus.BadRequest, 5);
+  } else {
+    return true;
+  }
+};
 
-
-module.exports = validationChecker
-
-
+module.exports = validationChecker;
