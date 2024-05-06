@@ -1,4 +1,4 @@
-const {getAllQuickAnswer } = require('../controller/quickAnswers')
+const {getAllTransformations } = require('../controller/transformation')
 
 const express = require('express');
 
@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // GET  (/quick_answers) 
-router.get('/', getAllQuickAnswer );
+router.get('/', getAllTransformations );
 
 
 

@@ -1,15 +1,15 @@
 const express = require('express')
 
 // routes
-const homeRouter = require('./home');
 const quickAnswers = require('./quickAnswers');
+const transformations = require('./transformation')
 const manageQuickAnswers = require('./admin/manageWebsite')
 
 const setupApiRouters = (app) => {
     const router = express.Router();
 
-    router.use('/', homeRouter);
     router.use('/quick-answers', quickAnswers);
+    router.use('/transformations', transformations);
 
     /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
     router.use('/admin/website-management', manageQuickAnswers);
