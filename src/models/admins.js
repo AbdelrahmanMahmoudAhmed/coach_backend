@@ -33,7 +33,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('superAdmin', 'admin'),
       allowNull: false,
     },
-
+    allowEdit: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    allowDelete: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    websiteManagement: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   }, {
     sequelize,
     tableName: 'admins',

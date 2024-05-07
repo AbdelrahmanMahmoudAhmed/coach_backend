@@ -17,6 +17,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique:true,
       },
       password: {
         type: Sequelize.STRING,
@@ -31,8 +32,9 @@ module.exports = {
         allowNull: false,
       },
       phone: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
+        unique:true,
       },
       createdAt: {
         allowNull: false,
@@ -61,29 +63,24 @@ module.exports = {
           key: "id"
         }
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
+      role: {
+        type: Sequelize.ENUM('superAdmin', 'admin'),
         allowNull: false,
       },
-      password: {
-        type: Sequelize.STRING,
+      allowEdit: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
+        defaultValue: true,
       },
-      type: {
-        type: Sequelize.ENUM('admin', 'client'),
+      allowDelete: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
+        defaultValue: true,
       },
-      image: {
-        type: Sequelize.STRING,
+      websiteManagement: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
-      },
-      phone: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
