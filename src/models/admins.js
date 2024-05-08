@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(Permission , { foreignKey : 'adminId'})
 
     }
+ 
   }
   Admin.init({
     personId: {

@@ -1,14 +1,8 @@
 const { getAdmins, addAdmin , getSingleAdmin , deleteAdmin , updateAdmin  } = require('../../controller/admins')
 const {addAdminValidation , updateAdminValidation } = require('../../validation/admins');
-
 const express = require('express');
 
-
-
-  
 const router = express.Router();
-
-
 
 
 

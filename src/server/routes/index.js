@@ -5,7 +5,9 @@ const quickAnswers = require('./quickAnswers');
 const transformations = require('./transformation')
 const manageQuickAnswers = require('./admin/manageWebsite')
 const manageAdmins = require('./admin/admins')
-
+const adminAuth = require('./admin/auth')
+const { ADMIN , CLIENT } =  require('../../constant/roles')
+const {isAuth} = require('../middleware/isAuth')
 const setupApiRouters = (app) => {
     const router = express.Router();
 
@@ -13,11 +15,13 @@ const setupApiRouters = (app) => {
     router.use('/transformations', transformations);
 
     /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
-
+    // admin auth
+    router.use('/admin' , adminAuth);
     //manage website
-    router.use('/admin/website-management', manageQuickAnswers);
+    router.use('/admin/website-management', isAuth(ADMIN) ,manageQuickAnswers);
     //manage admins
-    router.use('/admin', manageAdmins);
+    router.use('/admin', isAuth(ADMIN), manageAdmins);
+
 
     app.use('/api', router);
 }
