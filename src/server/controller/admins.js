@@ -82,6 +82,7 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
 
 // add new Admin
 const addAdmin = controllerWrapper(async (req, res, next) => {
+  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const { name, email, password, passwordConfirmation, phone, role } = req.body;
 
   /* ------------------------------- START ------------------------------- */
@@ -148,6 +149,7 @@ const addAdmin = controllerWrapper(async (req, res, next) => {
 // update Admin
 const updateAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
+  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const { name, email, password, passwordConfirmation, phone, role, allowEdit, allowDelete, websiteManagement } = req.body;
   const image = req.file?.filename;
 
@@ -227,6 +229,74 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 
 
+// update me
+const updateMe = controllerWrapper(async (req, res, next) => {
+  console.log("hhhhhhhhhhhhhhhhhhi")
+
+  const adminId = req.auth.id;
+  const { name, email, password, passwordConfirmation, phone} = req.body;
+  const image = req.file?.filename;
+  /* ------------------------------- START ------------------------------- */
+  // validate the data
+  await validationChecker(req, res);
+  if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 5);
+  /* ------------------------------- END ------------------------------- */
+console.log("hhhhhhhhhhhhhhhhhhi")
+
+  const adminData = await Admin.findOne({ where: { id: adminId } });
+  const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
+  if (!adminData || !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+
+
+  /* ------------------------------- START ------------------------------- */
+  // checking the email and phone in all persons except the requested admin
+  const checkingArr = []
+  phone && checkingArr.push({ phone })
+  email && checkingArr.push({ email })
+  const searchPerson = await Person.findAll({
+    where: {
+      [Op.and]: [
+        { [Op.or]: checkingArr },
+        { id: { [Op.not]: adminData.dataValues.personId } }
+      ]
+    }
+  })
+  const checkValidCredentials = []
+  searchPerson.forEach((person) => {
+    if (person.email == email) checkValidCredentials.push('this email is invalid')
+    if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
+  })
+  if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
+
+  /* ------------------------------- END ------------------------------- */
+
+
+
+
+  let updatedData = {} // to collect updated data on the two tables ( Person + Admin )
+
+  /* ------------------------------- START ------------------------------- */
+  // changing data on the person table only
+  const hashingPass = password ? await hashPassword(password) : null;
+
+  name && (personData.name = name);
+  email && (personData.email = email);
+  password && (personData.password = hashingPass);
+  phone && (personData.phone = phone);
+  image && (personData.image = image);
+
+  const savedPersonData = await personData.save();
+  const { id, ...rest } = savedPersonData.dataValues
+  updatedData = { ...rest }
+  /* ------------------------------- END ------------------------------- */
+
+
+
+  successResponse(res, updatedData);
+
+});
+
+
 
 
 
@@ -235,6 +305,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 // delete admin
 const deleteAdmin = controllerWrapper(async (req, res, next) => {
+  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const adminId = req.params.id;
 
   const theAdmin = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
@@ -260,4 +331,5 @@ module.exports = {
   getSingleAdmin,
   deleteAdmin,
   updateAdmin,
+  updateMe
 };

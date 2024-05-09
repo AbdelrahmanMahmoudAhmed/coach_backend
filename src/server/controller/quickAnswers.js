@@ -11,7 +11,7 @@ const getAllQuickAnswer = controllerWrapper(async (req, res, next) => {
 });
 const addQuickAnswer = controllerWrapper(async (req, res, next) => {
   const { questionAr, questionEn, answerAr, answerEn } = req.body;
-
+  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   await validationChecker(req, res);
 
   const quickAnswerRq = await QuickAnswer.create({
@@ -24,6 +24,8 @@ const addQuickAnswer = controllerWrapper(async (req, res, next) => {
 });
 const deleteQuickAnswer = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
+  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+
 
   const data = await QuickAnswer.findOne({ where: { id } });
   if (data) {
@@ -33,8 +35,16 @@ const deleteQuickAnswer = controllerWrapper(async (req, res, next) => {
     throw createAppError("This item was not found", HttpStatus.NotFound, 100);
   }
 });
+
+
+
+
+
+
 const updateQuickAnswer = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
+  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+
   const { questionAr, questionEn, answerAr, answerEn } = req.body;
 
   await validationChecker(req, res);

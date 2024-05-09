@@ -12,6 +12,8 @@ const getAllTransformations = controllerWrapper(async (req, res, next) => {
 
 
 const addTransformation = controllerWrapper(async (req, res, next) => {
+  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+
   const { descriptionAr, descriptionEn } = req.body;
   const image = req.file?.filename;
   if(!image){
@@ -32,6 +34,7 @@ const addTransformation = controllerWrapper(async (req, res, next) => {
 
 const deleteTransformation = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
+  if(! req.auth.allowDelete) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
 
   const data = await Transformation.findOne({ where: { id } });
   if (data) {
@@ -44,6 +47,8 @@ const deleteTransformation = controllerWrapper(async (req, res, next) => {
 
 
 const updateTransformation = controllerWrapper(async (req, res, next) => {
+  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+
   const { id } = req.params;
   const { descriptionAr, descriptionEn } = req.body;
   const image = req.file?.filename;
