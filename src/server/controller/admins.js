@@ -27,9 +27,12 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
         [Op.or]: [
           { name: { [Op.like]: `%${searchTerm}%` } },
           { email: { [Op.like]: `%${searchTerm}%` } },
-        ]
-      }
-    }
+        ],
+        
+      },
+    },
+  
+
   });
   /* ------------------------------- END ------------------------------- */
 
@@ -82,7 +85,6 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
 
 // add new Admin
 const addAdmin = controllerWrapper(async (req, res, next) => {
-  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const { name, email, password, passwordConfirmation, phone, role } = req.body;
 
   /* ------------------------------- START ------------------------------- */
@@ -149,7 +151,6 @@ const addAdmin = controllerWrapper(async (req, res, next) => {
 // update Admin
 const updateAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
-  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const { name, email, password, passwordConfirmation, phone, role, allowEdit, allowDelete, websiteManagement } = req.body;
   const image = req.file?.filename;
 
@@ -231,7 +232,6 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 // update me
 const updateMe = controllerWrapper(async (req, res, next) => {
-  console.log("hhhhhhhhhhhhhhhhhhi")
 
   const adminId = req.auth.id;
   const { name, email, password, passwordConfirmation, phone} = req.body;
@@ -241,7 +241,6 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   await validationChecker(req, res);
   if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 5);
   /* ------------------------------- END ------------------------------- */
-console.log("hhhhhhhhhhhhhhhhhhi")
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
@@ -305,7 +304,6 @@ console.log("hhhhhhhhhhhhhhhhhhi")
 
 // delete admin
 const deleteAdmin = controllerWrapper(async (req, res, next) => {
-  if( req.auth.role != "superAdmin") throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
   const adminId = req.params.id;
 
   const theAdmin = await Admin.findOne({ where: { id: adminId }, include: 'Person' });

@@ -52,7 +52,6 @@ const updateTransformation = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
   const { descriptionAr, descriptionEn } = req.body;
   const image = req.file?.filename;
-console.log("image >>> " , image)
   await validationChecker(req, res);
 
   const data = await Transformation.findOne({ where: { id } });

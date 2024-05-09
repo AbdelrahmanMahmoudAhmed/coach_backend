@@ -1,6 +1,8 @@
 const { getAdmins, addAdmin , getSingleAdmin , deleteAdmin , updateAdmin , updateMe } = require('../../controller/admins')
 const {addAdminValidation , updateAdminValidation } = require('../../validation/admins');
 const express = require('express');
+const {isSuperAdmin} = require('../../middleware/isAuth')
+const { ADMIN  } =  require('../../../constant/roles')
 
 const router = express.Router();
 
@@ -13,13 +15,13 @@ router.get('/admins',  getAdmins);
 // GET  (/admins) 
 router.get('/admins/:id',  getSingleAdmin);
 // POST  (/admins) 
-router.post('/admins', addAdminValidation, addAdmin);
+router.post('/admins', isSuperAdmin(ADMIN) , addAdminValidation, addAdmin);
 // // DELETE  (/admins) 
-router.delete('/admins/:id', deleteAdmin);
+router.delete('/admins/:id', isSuperAdmin(ADMIN) , deleteAdmin);
 // // PATCH  (/admins/me) 
 router.patch('/admins/me', updateAdminValidation  ,updateMe);
 // // PATCH  (/admins) 
-router.patch('/admins/:id', updateAdminValidation  ,updateAdmin);
+router.patch('/admins/:id', isSuperAdmin(ADMIN) , updateAdminValidation  ,updateAdmin);
 
 
 
