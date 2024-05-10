@@ -14,6 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(Admin , { foreignKey : 'personId'})
       this.hasOne(Client , { foreignKey : 'personId'})
     }
+    toJSON() {
+      // Log a message to indicate that toJSON is being called
+      console.log('toJSON method is being called.');
+  
+      // Exclude the password field from the JSON representation
+      const json = { ...this.get() };
+      delete json.password;
+      return json;
+    }
   }
   
   Person.init({
@@ -36,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING,

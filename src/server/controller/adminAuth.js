@@ -19,27 +19,27 @@ const { getToken } = require('../utils/jwt')
 // get single admin admin using id
 const login = controllerWrapper(async (req, res, next) => {
     const { email, password } = req.body;
-    const hashingPassword = await hashPassword(password)
     // getting the admin from database
     const currentAdmin = await Admin.findOne({
         include: [{
             model: Person,
-            where: { email }
+            where: { email },
         }],
     });
-    if (!currentAdmin) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
 
+    if (!currentAdmin) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
     // compare the password
     const comparedPassword = await comparePassword(currentAdmin.dataValues.Person.dataValues.password, password);
 
     if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, 1);
-
+    else{
     // retrieve the convenient data
-    const { id, ...rest } = currentAdmin.dataValues.Person.dataValues
+    const { id, password , ...rest } = currentAdmin.dataValues.Person.dataValues
     const convenientData = { id: currentAdmin.dataValues.id, ...rest, role: currentAdmin.dataValues.role, allowEdit: currentAdmin.dataValues.allowEdit, allowDelete: currentAdmin.dataValues.allowDelete, websiteManagement: currentAdmin.dataValues.websiteManagement }
     const token = getToken(convenientData);
-
     successResponse(res,  convenientData , 200 ,[{ token:token}]);
+    }
+
 });
 
 

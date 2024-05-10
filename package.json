@@ -8,7 +8,8 @@
     "start": "node --env-file .env ./src/server",
     "dev": " nodemon --env-file .env ./src/server",
     "migrate": "sequelize db:migrate",
-    "undo": "sequelize db:migrate:undo"
+    "undo": "sequelize db:migrate:undo",
+    "seed":"sequelize db:seed:all"
   },
   "author": "",
   "license": "ISC",

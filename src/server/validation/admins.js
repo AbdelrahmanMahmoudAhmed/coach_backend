@@ -8,8 +8,8 @@ const addAdminValidation =  checkSchema({
         optional:false,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the name must be at least 6 characters'
+            options: { min: 3 },
+            errorMessage: 'the name must be at least 3 characters'
         }
     },
     email: {

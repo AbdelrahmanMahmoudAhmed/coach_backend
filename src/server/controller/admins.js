@@ -51,7 +51,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
   });
 
   const manipulatedData = data.map((admin) => {
-    const { id, ...rest } = admin.dataValues.Person.dataValues
+    const { id, password, ...rest } = admin.dataValues.Person.dataValues
     return { id: admin.dataValues.id, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
   })
 
@@ -70,7 +70,7 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
   if(!data)  throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
-  const { id, ...rest } = data.dataValues.Person.dataValues
+  const { id, password, ...rest } = data.dataValues.Person.dataValues
 
   const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
@@ -218,8 +218,11 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  const { id, ...rest } = savedPersonData.dataValues
-  updatedData = { ...updatedData, ...rest }
+  if(savedPersonData){
+    const { id, password , ...rest } = savedPersonData.dataValues
+    updatedData = { ...updatedData, ...rest }
+  }
+
   /* ------------------------------- END ------------------------------- */
 
 
@@ -285,8 +288,11 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  const { id, ...rest } = savedPersonData.dataValues
-  updatedData = { ...rest }
+  if(savedPersonData){
+    const { id, password , ...rest } = savedPersonData.dataValues
+    updatedData = { ...rest }
+  }
+
   /* ------------------------------- END ------------------------------- */
 
 
@@ -307,7 +313,7 @@ const deleteAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
 
   const theAdmin = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  const { id, ...rest } = theAdmin.dataValues.Person.dataValues
+  const { id, password , ...rest } = theAdmin.dataValues.Person.dataValues
   const data = await Person.findOne({ where: { id } });
 
   if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 100);
