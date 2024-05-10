@@ -1,30 +1,41 @@
-const express = require('express')
+const express = require("express");
 
+//middlewares and helpers
+const { ADMIN, CLIENT } = require("../../constant/roles");
+const { isAuth } = require("../middleware/isAuth");
 // routes
-const quickAnswers = require('./quickAnswers');
-const transformations = require('./transformation')
-const manageQuickAnswers = require('./admin/manageWebsite')
-const manageAdmins = require('./admin/admins')
-const adminAuth = require('./admin/auth')
-const { ADMIN , CLIENT } =  require('../../constant/roles')
-const {isAuth} = require('../middleware/isAuth')
+const quickAnswers = require("./quickAnswers");
+const transformations = require("./transformation");
+const manageQuickAnswers = require("./admin/manageWebsite");
+const manageAdmins = require("./admin/admins");
+const manageClients = require("./admin/manageClients");
+const adminAuth = require("./admin/auth");
+const clientAuth = require("./auth/auth");
+const clientManagement = require("./client/manageClient")
+
 const setupApiRouters = (app) => {
-    const router = express.Router();
+  const router = express.Router();
 
-    router.use('/quick-answers', quickAnswers);
-    router.use('/transformations', transformations);
+  /* ------------------------------- WEBSITE DATA ------------------------------- */
+  router.use("/quick-answers", quickAnswers);
+  router.use("/transformations", transformations);
 
-    /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
-    // admin auth
-    router.use('/admin' , adminAuth);
-    //manage website
-    router.use('/admin/website-management', isAuth(ADMIN) ,manageQuickAnswers);
-    //manage admins
-    router.use('/admin', isAuth(ADMIN), manageAdmins);
+  /* ------------------------------- WEBSITE AUTH ------------------------------- */
+  // website auth
+  router.use("/auth", clientAuth);
+  router.use('/me' ,clientManagement )
 
+  /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
+  // admin auth
+  router.use("/admin", adminAuth);
+  //manage website
+  router.use("/admin/website-management", isAuth(ADMIN), manageQuickAnswers);
+  //manage admins
+  router.use("/admin", isAuth(ADMIN), manageAdmins);
+  //manage clients
+  router.use("/admin/clients-management", isAuth(ADMIN), manageClients);
 
-    app.use('/api', router);
-}
-
+  app.use("/api", router);
+};
 
 module.exports = setupApiRouters;

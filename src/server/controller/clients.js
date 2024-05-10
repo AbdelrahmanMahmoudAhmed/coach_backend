@@ -1,4 +1,4 @@
-const { sequelize, Person, Admin } = require("../../models");
+const { sequelize, Person , Client } = require("../../models");
 const { Op } = require('sequelize');
 
 const { createAppError } = require("../utils/error");
@@ -11,8 +11,8 @@ const controllerWrapper = require("../utils/controllerWrapper");
 
 
 
-// get all admins with pagination
-const getAdmins = controllerWrapper(async (req, res, next) => {
+// get all clients with pagination
+const getClients = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
@@ -20,7 +20,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
   const perPage = 2;
   const offset = (page - 1) * perPage
   const searchTerm = req.query.search || ""
-  const totalCount = await Admin.count({
+  const totalCount = await Client.count({
     include: {
       model: Person,
       where: {
@@ -37,7 +37,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
 
-  const data = await Admin.findAll({
+  const data = await Client.findAll({
     include: [{// Notice `include` takes an ARRAY
       model: Person,
       where: {
@@ -50,9 +50,9 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
     }
   });
 
-  const manipulatedData = data.map((admin) => {
-    const { id, password, ...rest } = admin.dataValues.Person.dataValues
-    return { id: admin.dataValues.id, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
+  const manipulatedData = data.map((client) => {
+    const { id, password, ...rest } = client.dataValues.Person.dataValues
+    return { id: client.dataValues.id, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
   })
 
   successResponse(res, manipulatedData, 200, [{pagination :{ currentPage: page, perPage, totalCount} } ]);
@@ -64,31 +64,15 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
 
 
 
-// get single admin admin using id
-const getSingleAdmin = controllerWrapper(async (req, res, next) => {
-  const adminId = req.params.id;
-  const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!data)  throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+// get single client client using id
+const getSingleClient = controllerWrapper(async (req, res, next) => {
+  const clientId = req.params.id;
+  const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
+  if(!data)  throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
   const { id, password, ...rest } = data.dataValues.Person.dataValues
 
   const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
-  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
-  successResponse(res, manipulatedData);
-});
-
-
-
-// get single admin admin using id
-const getMe = controllerWrapper(async (req, res, next) => {
-  const adminId = req.auth.id;
-  const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!data)  throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
-
-  const { id, password, ...rest } = data.dataValues.Person.dataValues
-
-  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
-  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
   successResponse(res, manipulatedData);
 });
 
@@ -98,9 +82,9 @@ const getMe = controllerWrapper(async (req, res, next) => {
 
 
 
-// add new Admin
-const addAdmin = controllerWrapper(async (req, res, next) => {
-  const { name, email, password, passwordConfirmation, phone, role } = req.body;
+// add new client
+const addClient = controllerWrapper(async (req, res, next) => {
+  const { name, email, password, passwordConfirmation, phone, goal , tall , weight } = req.body;
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -146,27 +130,29 @@ const addAdmin = controllerWrapper(async (req, res, next) => {
     password: hashingPass,
     image,
     phone,
-    type: 'admin',
+    type: 'client',
   });
 
-  // Create a new admin associated with the person
-  const admin = await Admin.create({
+  // Create a new client associated with the person
+  const client = await Client.create({
     personId: person.id,
-    role
+    tall,
+    weight,
+    goal,
   });
 
-  admin.dataValues = { ...person.dataValues, ...admin.dataValues }
-  successResponse(res, admin);
+  client.dataValues = { ...person.dataValues, ...client.dataValues }
+  successResponse(res, client);
 
 });
 
 
 
 
-// update Admin
-const updateAdmin = controllerWrapper(async (req, res, next) => {
-  const adminId = req.params.id;
-  const { name, email, password, passwordConfirmation, phone, role, allowEdit, allowDelete, websiteManagement } = req.body;
+// update client
+const updateClient = controllerWrapper(async (req, res, next) => {
+  const clientId = req.params.id;
+  const { name, email, password, passwordConfirmation, phone, goal , tall , weight } = req.body;
   const image = req.file?.filename;
 
 
@@ -177,13 +163,13 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
 
-  const adminData = await Admin.findOne({ where: { id: adminId } });
-  const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if (!adminData || !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  const clientData = await Client.findOne({ where: { id: clientId } });
+  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
+  if (!clientData || !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
-  // checking the email and phone in all persons except the requested admin
+  // checking the email and phone in all persons except the requested client
   const checkingArr = []
   phone && checkingArr.push({ phone })
   email && checkingArr.push({ email })
@@ -191,7 +177,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
     where: {
       [Op.and]: [
         { [Op.or]: checkingArr },
-        { id: { [Op.not]: adminData.dataValues.personId } }
+        { id: { [Op.not]: clientData.dataValues.personId } }
       ]
     }
   })
@@ -207,17 +193,16 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 
 
-  let updatedData = {} // to collect updated data on the two tables ( Person + Admin )
+  let updatedData = {} // to collect updated data on the two tables ( Person + client )
 
 
   /* ------------------------------- START ------------------------------- */
-  // changing data on the Admin table
-  role && (adminData.role = role);
-  allowEdit && (adminData.allowEdit = allowEdit);
-  allowDelete && (adminData.allowDelete = allowDelete);
-  websiteManagement && (adminData.websiteManagement = websiteManagement);
-  const savedAdminData = await adminData.save();
-  updatedData = { ...savedAdminData.dataValues }
+  // changing data on the Client table
+  tall && (clientData.tall = tall);
+  weight && (clientData.weight = weight);
+  goal && (clientData.goal = goal);
+  const savedclientData = await clientData.save();
+  updatedData = { ...savedclientData.dataValues }
   /* ------------------------------- END ------------------------------- */
 
 
@@ -251,8 +236,8 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 // update me
 const updateMe = controllerWrapper(async (req, res, next) => {
 
-  const adminId = req.auth.id;
-  const { name, email, password, passwordConfirmation, phone} = req.body;
+  const clientId = req.auth.id;
+  const { name, email, password, passwordConfirmation, phone , tall ,weight , goal} = req.body;
   const image = req.file?.filename;
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -260,13 +245,13 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 5);
   /* ------------------------------- END ------------------------------- */
 
-  const adminData = await Admin.findOne({ where: { id: adminId } });
-  const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if (!adminData || !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  const clientData = await Client.findOne({ where: { id: clientId } });
+  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
+  if (!clientData || !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
-  // checking the email and phone in all persons except the requested admin
+  // checking the email and phone in all persons except the requested client
   const checkingArr = []
   phone && checkingArr.push({ phone })
   email && checkingArr.push({ email })
@@ -274,7 +259,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
     where: {
       [Op.and]: [
         { [Op.or]: checkingArr },
-        { id: { [Op.not]: adminData.dataValues.personId } }
+        { id: { [Op.not]: clientData.dataValues.personId } }
       ]
     }
   })
@@ -290,10 +275,21 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
 
 
-  let updatedData = {} // to collect updated data on the two tables ( Person + Admin )
+  let updatedData = {} // to collect updated data on the two tables ( Person + client )
+
+
+  
+  /* ------------------------------- START ------------------------------- */
+  // changing data on the Client table
+  tall && (clientData.tall = tall);
+  weight && (clientData.weight = weight);
+  goal && (clientData.goal = goal);
+  const savedclientData = await clientData.save();
+  updatedData = { ...savedclientData.dataValues }
+  /* ------------------------------- END ------------------------------- */
 
   /* ------------------------------- START ------------------------------- */
-  // changing data on the person table only
+  // changing data on the person table 
   const hashingPass = password ? await hashPassword(password) : null;
 
   name && (personData.name = name);
@@ -305,7 +301,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const savedPersonData = await personData.save();
   if(savedPersonData){
     const { id, password , ...rest } = savedPersonData.dataValues
-    updatedData = { ...rest }
+    updatedData = { ...updatedData , ...rest }
   }
 
   /* ------------------------------- END ------------------------------- */
@@ -318,27 +314,41 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
 
 
+// get single client client using id
+const getMe = controllerWrapper(async (req, res, next) => {
+    const clientId = req.auth.id;
+    const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
+    if(!data)  throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  
+    const { id, password, ...rest } = data.dataValues.Person.dataValues
+  
+    const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+    successResponse(res, manipulatedData);
+  });
+  
 
 
 
 
 
-// delete admin
-const deleteAdmin = controllerWrapper(async (req, res, next) => {
-  const adminId = req.params.id;
 
-  const theAdmin = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!theAdmin) throw createAppError("This Admin was not found", HttpStatus.BadRequest, 100);
-  const { id, password , ...rest } = theAdmin.dataValues.Person.dataValues
+// delete client
+const deleteClient = controllerWrapper(async (req, res, next) => {
+  const clientId = req.params.id;
+
+  const theClient = await Client.findOne({ where: { id: clientId }, include: 'Person' });
+
+  if(!theClient) throw createAppError("This client was not found", HttpStatus.BadRequest, 100);
+  const { id, password , ...rest } = theClient.dataValues.Person.dataValues
   const data = await Person.findOne({ where: { id } });
 
-  if (!data) throw createAppError("This Admin was not found", HttpStatus.NotFound, 100);
+  if (!data) throw createAppError("This client was not found", HttpStatus.NotFound, 100);
 
-// delete admin from the person table and it will be deleted from admin table ( CASCADE )
+// delete client from the person table and it will be deleted from client table ( CASCADE )
   await data.destroy();
 
   // retrieve the convenient data
-  const manipulatedData = { id: theAdmin.dataValues.id, ...rest, role: theAdmin.dataValues.role, allowEdit: theAdmin.dataValues.allowEdit, allowDelete: theAdmin.dataValues.allowDelete, websiteManagement: theAdmin.dataValues.websiteManagement }
+  const manipulatedData = { id: theClient.dataValues.id, ...rest, role: theClient.dataValues.role, allowEdit: theClient.dataValues.allowEdit, allowDelete: theClient.dataValues.allowDelete, websiteManagement: theClient.dataValues.websiteManagement }
 
   successResponse(res, manipulatedData);
 
@@ -346,11 +356,11 @@ const deleteAdmin = controllerWrapper(async (req, res, next) => {
 
 
 module.exports = {
-  addAdmin,
-  getAdmins,
-  getSingleAdmin,
-  deleteAdmin,
-  updateAdmin,
+  addClient,
+  getClients,
+  getSingleClient,
+  deleteClient,
+  updateClient,
   updateMe,
   getMe
 };

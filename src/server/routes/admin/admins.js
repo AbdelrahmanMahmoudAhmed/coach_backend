@@ -1,4 +1,4 @@
-const { getAdmins, addAdmin , getSingleAdmin , deleteAdmin , updateAdmin , updateMe } = require('../../controller/admins')
+const { getAdmins, addAdmin , getSingleAdmin , deleteAdmin , updateAdmin , updateMe , getMe } = require('../../controller/admins')
 const {addAdminValidation , updateAdminValidation } = require('../../validation/admins');
 const express = require('express');
 const {isSuperAdmin} = require('../../middleware/isAuth')
@@ -12,6 +12,8 @@ const router = express.Router();
 
 // GET  (/admins) 
 router.get('/admins',  getAdmins);
+// // GET  (/admins/me) 
+router.get('/admins/me'  ,getMe);
 // GET  (/admins) 
 router.get('/admins/:id',  getSingleAdmin);
 // POST  (/admins) 

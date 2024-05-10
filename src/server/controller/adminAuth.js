@@ -1,11 +1,8 @@
-const { sequelize, Person, Admin } = require("../../models");
-const { Op } = require('sequelize');
-
+const {  Person, Admin } = require("../../models");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
-const { hashPassword, comparePassword } = require("../utils/password");
-const validationChecker = require("../validation/checker");
+const {  comparePassword } = require("../utils/password");
 const controllerWrapper = require("../utils/controllerWrapper");
 
 
@@ -16,7 +13,6 @@ const { getToken } = require('../utils/jwt')
 
 
 
-// get single admin admin using id
 const login = controllerWrapper(async (req, res, next) => {
     const { email, password } = req.body;
     // getting the admin from database
