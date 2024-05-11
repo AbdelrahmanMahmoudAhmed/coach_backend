@@ -11,7 +11,8 @@ const manageAdmins = require("./admin/admins");
 const manageClients = require("./admin/manageClients");
 const adminAuth = require("./admin/auth");
 const clientAuth = require("./auth/auth");
-const clientManagement = require("./client/manageClient")
+const clientManagement = require("./client/manageClient");
+const productsManagement = require("./admin/manageProducts");
 
 const setupApiRouters = (app) => {
   const router = express.Router();
@@ -34,6 +35,8 @@ const setupApiRouters = (app) => {
   router.use("/admin", isAuth(ADMIN), manageAdmins);
   //manage clients
   router.use("/admin/clients-management", isAuth(ADMIN), manageClients);
+    //manage products
+    router.use("/admin/products", isAuth(ADMIN), productsManagement);
 
   app.use("/api", router);
 };

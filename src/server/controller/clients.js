@@ -164,8 +164,9 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
 
   const clientData = await Client.findOne({ where: { id: clientId } });
+  if (!clientData ) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!clientData || !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if ( !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
@@ -246,8 +247,9 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const clientData = await Client.findOne({ where: { id: clientId } });
+  if (!clientData ) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!clientData || !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */

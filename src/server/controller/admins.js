@@ -178,8 +178,9 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
+  if (!adminData ) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if (!adminData || !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if ( !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
@@ -261,8 +262,10 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
+  if (!adminData ) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if (!adminData || !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if ( !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
