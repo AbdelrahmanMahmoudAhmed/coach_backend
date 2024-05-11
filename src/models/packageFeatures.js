@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
         packageId: {
             allowNull: false,
             type: DataTypes.INTEGER,
-            unique: true,
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
             references: {

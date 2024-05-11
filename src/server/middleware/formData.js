@@ -47,6 +47,17 @@ const productStorage = multer.diskStorage({
     cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname);
   },
 });
+const packageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "..", "..", "..", "uploads", "package")); // Destination folder for uploaded files
+  },
+
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname);
+  },
+});
+
 
 
 
@@ -70,6 +81,7 @@ const transformationsUpload = multer({ storage: transformationsStorage, fileFilt
 const adminUpload = multer({ storage: adminStorage, fileFilter: imageFilter });
 const clientUpload = multer({ storage: clientStorage, fileFilter: imageFilter });
 const productUpload = multer({ storage: productStorage, fileFilter: imageFilter });
+const packageUpload = multer({ storage: packageStorage, fileFilter: imageFilter });
 
 const formDataMiddleware = (req, res, next) => {
   if (req.url.includes('/api/admin/website-management/transformations')) {
@@ -84,6 +96,9 @@ const formDataMiddleware = (req, res, next) => {
   } else if (  req.url.includes('/api/admin/products')) {
     // Apply single file upload middleware to store products files
     productUpload.single('image')(req, res, next);
+  } else if (  req.url.includes('/api/admin/packages')) {
+    // Apply single file upload middleware to store products files
+    packageUpload.single('image')(req, res, next);
   }else {
     // Apply any file upload middleware for other URLs
     multerMW.any()(req, res, next);

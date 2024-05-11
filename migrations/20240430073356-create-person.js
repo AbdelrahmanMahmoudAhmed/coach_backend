@@ -489,7 +489,6 @@ module.exports = {
       packageId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        unique: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         references: {
