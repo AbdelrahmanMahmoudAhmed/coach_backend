@@ -81,7 +81,7 @@ const transformationsUpload = multer({ storage: transformationsStorage, fileFilt
 const adminUpload = multer({ storage: adminStorage, fileFilter: imageFilter });
 const clientUpload = multer({ storage: clientStorage, fileFilter: imageFilter });
 const productUpload = multer({ storage: productStorage, fileFilter: imageFilter });
-const packageUpload = multer({ storage: packageStorage, fileFilter: imageFilter });
+const packageUpload = multer({ storage: packageStorage});
 
 const formDataMiddleware = (req, res, next) => {
   if (req.url.includes('/api/admin/website-management/transformations')) {

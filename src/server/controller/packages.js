@@ -1,21 +1,20 @@
-const { Item, Product, PackageFeature , Package } = require("../../models");
+const { Item, Product, PackageFeature, Package } = require("../../models");
 const { Op } = require("sequelize");
-
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
-// get all products with pagination
-const getProducts = controllerWrapper(async (req, res, next) => {
+// get all packages with pagination
+const getPackage = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
   const page = req.query.page && !isNaN(+req.query.page) ? +req.query.page : 1;
-  const perPage = 2;
+  const perPage = 10;
   const offset = (page - 1) * perPage;
   const searchTerm = req.query.search || "";
-  const totalCount = await Product.count({
+  const totalCount = await Package.count({
     include: {
       model: Item,
       where: {
@@ -27,13 +26,14 @@ const getProducts = controllerWrapper(async (req, res, next) => {
         ],
       },
     },
+
     where: {
-      [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
+      [Op.or]: [{ period: { [Op.like]: `%${searchTerm}%` } }],
     },
   });
   /* ------------------------------- END ------------------------------- */
 
-  const data = await Product.findAll({
+  const data = await Package.findAll({
     include: [
       {
         // Notice `include` takes an ARRAY
@@ -47,20 +47,25 @@ const getProducts = controllerWrapper(async (req, res, next) => {
           ],
         },
       },
+      {
+        model: PackageFeature,
+      }
     ],
     limit: perPage,
     offset,
     where: {
-      [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
+      [Op.or]: [{ period: { [Op.like]: `%${searchTerm}%` } }],
     },
   });
-  console.log("data", data);
-  const manipulatedData = data.map((product) => {
-    const { id, ...rest } = product.dataValues.Item.dataValues;
+
+
+  const manipulatedData = data.map((package) => {
+    const { id, ...rest } = package.dataValues.Item.dataValues;
     return {
-      id: product.dataValues.id,
+      id: package.dataValues.id,
       ...rest,
-      shippingPrice: product.dataValues.shippingPrice,
+      period: package.dataValues.period,
+      PackageFeatures: package.dataValues.PackageFeatures
     };
   });
 
@@ -69,28 +74,28 @@ const getProducts = controllerWrapper(async (req, res, next) => {
   ]);
 });
 
-// get single product using id
-const getSingleProduct = controllerWrapper(async (req, res, next) => {
-  const productId = req.params.id;
-  const data = await Product.findOne({
-    where: { id: productId },
-    include: "Item",
+// get single package using id
+const getSinglePackage = controllerWrapper(async (req, res, next) => {
+  const packageId = req.params.id;
+  const data = await Package.findOne({
+    where: { id: packageId },
+    include: [{ model: Item }, { model: PackageFeature, }],
   });
-  if (!data)
-    throw createAppError("This product is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
 
   const { id, ...rest } = data.dataValues.Item.dataValues;
 
   const manipulatedData = {
     id: data.dataValues.id,
     ...rest,
-    shippingPrice: data.dataValues.shippingPrice,
+    period: data.dataValues.period,
+    PackageFeatures: data.dataValues.PackageFeatures
   };
   successResponse(res, manipulatedData);
 });
 
-// add new product
-const addProduct = controllerWrapper(async (req, res, next) => {
+// add new package
+const addPackage = controllerWrapper(async (req, res, next) => {
   const {
     period,
     price,
@@ -104,7 +109,8 @@ const addProduct = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
-    await validationChecker(req, res);
+  await validationChecker(req, res);
+
   /* ------------------------------- END ------------------------------- */
 
   const image = req.file?.filename;
@@ -121,7 +127,7 @@ const addProduct = controllerWrapper(async (req, res, next) => {
     descriptionAr,
     descriptionEn,
     image,
-    type: "product",
+    type: "package",
   });
 
 
@@ -137,41 +143,30 @@ const addProduct = controllerWrapper(async (req, res, next) => {
 
 
 
-// create a new features according to package table
-let recordsToAdd;
-Array.isArray(packageFeatures) &&  (recordsToAdd = packageFeatures.map((feature)=>{
-    return  {featureAr:feature.featureAr , featureEn:feature.featureEn, packageId:package.id}
-}))
+  // create a new features according to package table
+  let recordsToAdd;
+  Array.isArray(packageFeatures) && (recordsToAdd = packageFeatures.map((feature) => {
+    return { featureAr: feature.featureAr, featureEn: feature.featureEn, packageId: package.id }
+  }))
+  const createPackageFeatures = await PackageFeature.bulkCreate(recordsToAdd)
 
-  
 
- const createPackageFeatures = await PackageFeature.bulkCreate(recordsToAdd)
 
-console.log('createPackageFeatures >>>>>>>>' , createPackageFeatures)
 
-const allFeatures = createPackageFeatures.map((featuer)=> featuer.dataValues );
-  package.dataValues = { ...package.dataValues, ...item.dataValues, PackageFeature : allFeatures  };
+
+  const { id, ...rest } = item.dataValues
+
+  const allFeatures = createPackageFeatures.map((feature) => feature.dataValues);
+  package.dataValues = { ...package.dataValues, ...rest, PackageFeature: allFeatures };
   successResponse(res, package);
-
-
-
-
 });
 
 
 
 
-
-
-
-
-
-
-
-
-// update product
-const updateProduct = controllerWrapper(async (req, res, next) => {
-  const productID = req.params.id;
+// update package
+const updatePackage = controllerWrapper(async (req, res, next) => {
+  const packageId = req.params.id;
   const {
     period,
     price,
@@ -179,38 +174,42 @@ const updateProduct = controllerWrapper(async (req, res, next) => {
     titleEn,
     descriptionAr,
     descriptionEn,
-    shippingPrice,
+    discountPercentage,
+    packageFeatures
   } = req.body;
   const image = req.file?.filename;
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
-    await validationChecker(req, res);
+  await validationChecker(req, res);
   /* ------------------------------- END ------------------------------- */
 
-  const productData = await Product.findOne({ where: { id: productID } });
-  if (!productData )
-    throw createAppError("This product is not found", HttpStatus.NotFound, 1);
-  const ItemData = await Item.findOne({
-    where: { id: productData.dataValues.itemId },
+  const packageData = await Package.findOne({ where: { id: packageId } }); // get the package
+  if (!packageData)
+    throw createAppError("This package is not found", HttpStatus.NotFound, 1);
+  const ItemData = await Item.findOne({     // get the item
+    where: { id: packageData.dataValues.itemId },
   });
-  if ( !ItemData)
-    throw createAppError("This product is not found", HttpStatus.NotFound, 1);
+  if (!ItemData) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
 
-  let updatedData = {}; // to collect updated data on the two tables ( Item + Product )
+  const featuresData = await PackageFeature.findAll({   // get all features
+    where: { packageId },
+  });
+
+  let updatedData = {}; // to collect updated data on the two tables ( Item + package )
 
   /* ------------------------------- START ------------------------------- */
-  // changing data on the Product table
-  shippingPrice && (productData.shippingPrice = shippingPrice);
+  // changing data on the package table
+  period && (packageData.period = period);
 
-  const savedProductData = await productData.save();
-  updatedData = { ...savedProductData.dataValues };
+  const savedPackageData = await packageData.save();
+  updatedData = { ...savedPackageData.dataValues };
   /* ------------------------------- END ------------------------------- */
 
   /* ------------------------------- START ------------------------------- */
   // changing data on the items table
 
-  period && (ItemData.period = period);
+  discountPercentage && (ItemData.discountPercentage = discountPercentage);
   price && (ItemData.price = price);
   titleAr && (ItemData.titleAr = titleAr);
   titleEn && (ItemData.titleEn = titleEn);
@@ -220,46 +219,67 @@ const updateProduct = controllerWrapper(async (req, res, next) => {
 
   const savedItemData = await ItemData.save();
   if (savedItemData) {
-    const { id, password, ...rest } = savedItemData.dataValues;
+    const { id, ...rest } = savedItemData.dataValues;
     updatedData = { ...updatedData, ...rest };
   }
-
   /* ------------------------------- END ------------------------------- */
+
+  /* ------------------------------- START ------------------------------- */
+  // changing data on the packageFeature table if there is any updated feature
+  let updatedFeatures ;
+  if (packageFeatures?.length) {
+    PackageFeature.destroy({
+      where:{packageId}
+    });
+    let recordsToAdd;
+
+    Array.isArray(packageFeatures) && (recordsToAdd = packageFeatures.map((feature) => {
+      return { featureAr: feature.featureAr, featureEn: feature.featureEn, packageId }
+    }))
+    const createPackageFeatures = await PackageFeature.bulkCreate(recordsToAdd);
+    updatedFeatures = createPackageFeatures
+  }
+  updatedFeatures ? updatedData = { ...updatedData, packageFeatures:updatedFeatures   } : updatedData = { ...updatedData,  packageFeatures :featuresData   }
+
+console.log("_______________+++______________" , featuresData)
+  /* ------------------------------- END ------------------------------- */
+
 
   successResponse(res, updatedData);
 });
 
 
 
-// delete Product
-const deleteProduct = controllerWrapper(async (req, res, next) => {
-  const productId = req.params.id;
+// delete package
+const deletePackage = controllerWrapper(async (req, res, next) => {
+  const packageId = req.params.id;
 
-  const theProduct = await Product.findOne({
-    where: { id: productId },
-    include: "Item",
+  const thePackage = await Package.findOne({
+    where: { id: packageId },
+    include: [{ model: Item }, { model: PackageFeature, }],
   });
 
-  if (!theProduct)
+  if (!thePackage)
     throw createAppError(
-      "This product was not found",
+      "This package was not found",
       HttpStatus.BadRequest,
       100
     );
-  const { id, ...rest } = theProduct.dataValues.Item.dataValues;
+  const { id, ...rest } = thePackage.dataValues.Item.dataValues;
   const data = await Item.findOne({ where: { id } });
 
   if (!data)
-    throw createAppError("This product was not found", HttpStatus.NotFound, 100);
+    throw createAppError("This package was not found", HttpStatus.NotFound, 100);
 
-  // delete product from the Item table and it will be deleted from product table ( CASCADE )
+  // delete package from the Item table and it will be deleted from package table ( CASCADE )
   await data.destroy();
 
   // retrieve the convenient data
   const manipulatedData = {
-    id: theProduct.dataValues.id,
+    id: thePackage.dataValues.id,
     ...rest,
-    shippingPrice: theProduct.dataValues.shippingPrice,
+    period: thePackage.dataValues.period,
+    PackageFeatures: thePackage.dataValues.PackageFeatures
 
   };
 
@@ -267,10 +287,10 @@ const deleteProduct = controllerWrapper(async (req, res, next) => {
 });
 
 module.exports = {
-  addProduct,
-  getProducts,
-  getSingleProduct,
-  deleteProduct,
-  updateProduct,
+  addPackage,
+  getPackage,
+  getSinglePackage,
+  deletePackage,
+  updatePackage,
 
 };

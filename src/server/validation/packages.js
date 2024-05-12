@@ -51,6 +51,7 @@ const addPackageValidation = checkSchema({
   },
   descriptionEn: {
     in: ["body"],
+    
     optional: false,
     trim: true,
     isLength: {
@@ -58,7 +59,31 @@ const addPackageValidation = checkSchema({
       errorMessage: "descriptionEn contain at least 7 char ",
     },
   },
+  packageFeatures: {
+    isArray: {
+      errorMessage: 'packageFeatures must be an array',
+    },
+    
+    custom: {
+      
+      options: (value) => {
+        if (!Array.isArray(value) || value.length === 0) {
+          throw new Error(' array must contain at least one element');
+        }
+        for (const obj of value) {
+          if (typeof obj !== 'object' || Object.values(obj).some(val => (typeof val !== 'string') || (val == ''))) {
+            throw new Error('keys ( featureEn & featureAr) must have an string value');
+          }
+          if( !obj['featureEn'] || !obj['featureAr'] ){
+            throw new Error('keys ( featureEn & featureAr) are required');
 
+          }
+        }
+        return true; // Validation passed
+      }
+    },
+    
+  }
 });
 
 const updatePackageValidation = checkSchema({
@@ -119,6 +144,49 @@ const updatePackageValidation = checkSchema({
       errorMessage: "descriptionEn contain at least 7 char ",
     },
   },
+  packageFeatures: {
+    isArray: {
+      errorMessage: 'packageFeatures must be an array',
+    },
+    optional:true,
+    custom: {
+      
+      options: (value) => {
+        if (!Array.isArray(value) || value.length === 0) {
+          throw new Error(' array must contain at least one element');
+        }
+        for (const obj of value) {
+          if (typeof obj !== 'object' || Object.values(obj).some(val => (typeof val !== 'string') || (val == ''))) {
+            throw new Error('keys ( featureEn & featureAr) must have an string value');
+          }
+          if( !obj['featureEn'] || !obj['featureAr'] ){
+            throw new Error('keys ( featureEn & featureAr) are required');
+
+          }
+        }
+        return true; // Validation passed
+      }
+    },
+    
+  }
 });
+
+
+// const validateFeatures = (value) => {
+//   if (!Array.isArray(value) || value.length === 0) {
+//     throw new Error(' array must contain at least one element');
+//   }
+//   for (const obj of value) {
+//     if (typeof obj !== 'object' || Object.values(obj).some(val => (typeof val !== 'string') || (val == ''))) {
+
+//       console.log("hellooooooooo")
+//       throw new Error('Each element of the nested array must be an object with string values');
+//     }
+//     if( !obj['featureEn'] || !obj['featureAr'] ){
+//       throw new Error('Each element of the nested array must be an object with string values');
+//     }
+//   }
+//   return true; // Validation passed
+// }
 
 module.exports = { addPackageValidation, updatePackageValidation };

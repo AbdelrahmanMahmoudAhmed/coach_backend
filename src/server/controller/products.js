@@ -4,7 +4,6 @@ const { Op } = require("sequelize");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
-const { hashPassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
@@ -123,13 +122,14 @@ const addProduct = controllerWrapper(async (req, res, next) => {
     image,
     type: "product",
   });
+  const { id , ...rest} =  item.dataValues
 
   // Create a new product associated with the item
   const product = await Product.create({
     itemId: item.id,
     shippingPrice,
   });
-  product.dataValues = { ...product.dataValues, ...item.dataValues };
+  product.dataValues = { ...product.dataValues, ...rest };
   successResponse(res, product);
 });
 
@@ -184,7 +184,7 @@ const updateProduct = controllerWrapper(async (req, res, next) => {
 
   const savedItemData = await ItemData.save();
   if (savedItemData) {
-    const { id, password, ...rest } = savedItemData.dataValues;
+    const { id, ...rest } = savedItemData.dataValues;
     updatedData = { ...updatedData, ...rest };
   }
 
