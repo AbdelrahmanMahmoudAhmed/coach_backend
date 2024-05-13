@@ -1,4 +1,4 @@
-const { Item, Product, PackageFeature, Package } = require("../../models");
+const { Item, PackageFeature, Package } = require("../../models");
 const { Op } = require("sequelize");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");

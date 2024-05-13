@@ -1,4 +1,4 @@
-const {getAllTransformations } = require('../controller/transformation')
+const {getAllSections } = require('../controller/sections')
 
 const express = require('express');
 
@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // GET  (/transformations) 
-router.get('/', getAllTransformations );
+router.get('/', getAllSections );
 
 
 

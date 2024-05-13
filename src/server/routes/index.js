@@ -8,6 +8,7 @@ const quickAnswers = require("./quickAnswers");
 const transformations = require("./transformation");
 const packages = require("./packages");
 const products = require("./products");
+const sections = require("./sections");
 const manageQuickAnswers = require("./admin/manageWebsite");
 const manageAdmins = require("./admin/admins");
 const manageClients = require("./admin/manageClients");
@@ -25,6 +26,7 @@ const setupApiRouters = (app) => {
   router.use("/transformations", transformations);
   router.use("/products", products);
   router.use("/packages", packages);
+  router.use("/sections", sections);
 
   /* ------------------------------- WEBSITE AUTH ------------------------------- */
   // website auth

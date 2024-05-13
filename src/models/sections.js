@@ -3,44 +3,57 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Video extends Model {
+    class Section extends Model {
 
         static associate() {
             // define association here
         }
     }
-    Video.init({
+    Section.init({
         id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER
           },
-
         link: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
-        descriptionAr: {
+        nameAr: {
             type: DataTypes.STRING,
-            allowNull: false,
+          
         },
-        descriptionEn: {
+        nameEn: {
             type: DataTypes.STRING,
-            allowNull: false,
+          
         },
         titleAr: {
             type: DataTypes.STRING,
-            allowNull: false,
+          
         },
         titleEn: {
             type: DataTypes.STRING,
+          
+        },
+        contentAr: {
+            type: DataTypes.STRING,          
+        },
+        contentEn: {
+            type: DataTypes.STRING,
+          
+        },
+        image: {
+            type: DataTypes.STRING,
+           
+        },
+        callToAction: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         },
     }, {
         sequelize,
-        tableName: 'videos',
-        modelName: 'Video',
+        tableName: 'sections',
+        modelName: 'Section',
     });
-    return Video;
+    return Section;
 };

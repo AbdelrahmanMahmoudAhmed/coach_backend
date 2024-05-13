@@ -17,7 +17,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique:true,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
@@ -34,7 +34,7 @@ module.exports = {
       phone: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique:true,
+        unique: true,
       },
       createdAt: {
         allowNull: false,
@@ -594,6 +594,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      titleAr: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      titleEn: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -603,6 +611,51 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    await queryInterface.createTable('sections', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      link: {
+        type: Sequelize.STRING,
+      },
+      nameAr: {
+        type: Sequelize.STRING,
+      },
+      nameEn: {
+        type: Sequelize.STRING,
+      },
+      titleAr: {
+        type: Sequelize.STRING,
+      },
+      titleEn: {
+        type: Sequelize.STRING,
+      },
+      contentAr: {
+        type: Sequelize.STRING,
+      },
+      contentEn: {
+        type: Sequelize.STRING,
+      },
+      image: {
+        type: Sequelize.STRING,
+      },
+      callToAction: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+    
     await queryInterface.createTable('quickAnswers', {
       id: {
         allowNull: false,

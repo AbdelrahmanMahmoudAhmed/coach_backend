@@ -10,6 +10,19 @@ const transformationsStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "..", "..", "..", "uploads", "transformation")); // Destination folder for uploaded files
   },
+  
+
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname);
+  },
+});
+
+const sectionsStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "..", "..", "..", "uploads", "section")); // Destination folder for uploaded files
+  },
+  
 
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -78,6 +91,8 @@ const imageFilter = function (req, file, cb) {
 
 // Multer instances
 const transformationsUpload = multer({ storage: transformationsStorage, fileFilter: imageFilter });
+const sectionsUpload = multer({ storage: sectionsStorage, fileFilter: imageFilter });
+
 const adminUpload = multer({ storage: adminStorage, fileFilter: imageFilter });
 const clientUpload = multer({ storage: clientStorage, fileFilter: imageFilter });
 const productUpload = multer({ storage: productStorage, fileFilter: imageFilter });
@@ -87,7 +102,10 @@ const formDataMiddleware = (req, res, next) => {
   if (req.url.includes('/api/admin/website-management/transformations')) {
     // Apply single file upload middleware to store transformations files
     transformationsUpload.single('image')(req, res, next);
-  } else if (  req.url.includes('/api/admin/admins')) {
+  } else if (req.url.includes('/api/admin/website-management/sections')) {
+    // Apply single file upload middleware to store transformations files
+    sectionsUpload.single('image')(req, res, next);
+  }  else if (  req.url.includes('/api/admin/admins')) {
     // Apply single file upload middleware to store admins files
     adminUpload.single('image')(req, res, next);
   }  else if (  (req.url.includes('/api/admin/clients-management') )|| ( req.url.includes('/api/auth/sign-in') )|| ( req.url.includes('/api/me')   )) {
