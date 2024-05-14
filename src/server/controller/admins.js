@@ -29,10 +29,10 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
           { name: { [Op.like]: `%${searchTerm}%` } },
           { email: { [Op.like]: `%${searchTerm}%` } },
         ],
-        
+
       },
     },
-  
+
 
   });
   /* ------------------------------- END ------------------------------- */
@@ -56,7 +56,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
     return { id: admin.dataValues.id, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
   })
 
-  successResponse(res, manipulatedData, 200, [{pagination :{ currentPage: page, perPage, totalCount} } ]);
+  successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
 });
 
 
@@ -69,7 +69,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
 const getSingleAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!data)  throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
   const { id, password, ...rest } = data.dataValues.Person.dataValues
 
@@ -84,7 +84,7 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
 const getMe = controllerWrapper(async (req, res, next) => {
   const adminId = req.auth.id;
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!data)  throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
   const { id, password, ...rest } = data.dataValues.Person.dataValues
 
@@ -179,9 +179,9 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
-  if (!adminData ) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!adminData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if ( !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
 
 
@@ -244,8 +244,8 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  if(savedPersonData){
-    const { id, password , ...rest } = savedPersonData.dataValues
+  if (savedPersonData) {
+    const { id, password, ...rest } = savedPersonData.dataValues
     updatedData = { ...updatedData, ...rest }
   }
 
@@ -263,7 +263,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 const updateMe = controllerWrapper(async (req, res, next) => {
 
   const adminId = req.auth.id;
-  const { name, email, password, passwordConfirmation, phone} = req.body;
+  const { name, email, password, passwordConfirmation, phone } = req.body;
   const image = req.file?.filename;
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -272,10 +272,10 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
-  if (!adminData ) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!adminData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if ( !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
 
   /* ------------------------------- START ------------------------------- */
@@ -316,8 +316,8 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  if(savedPersonData){
-    const { id, password , ...rest } = savedPersonData.dataValues
+  if (savedPersonData) {
+    const { id, password, ...rest } = savedPersonData.dataValues
     updatedData = { ...rest }
   }
 
@@ -341,13 +341,17 @@ const deleteAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
 
   const theAdmin = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if(!theAdmin) throw createAppError("This Admin was not found", HttpStatus.BadRequest, 100);
-  const { id, password , ...rest } = theAdmin.dataValues.Person.dataValues
+  if (!theAdmin) throw createAppError("This Admin was not found", HttpStatus.BadRequest, 100);
+  const { id, password, ...rest } = theAdmin.dataValues.Person.dataValues
   const data = await Person.findOne({ where: { id } });
 
   if (!data) throw createAppError("This Admin was not found", HttpStatus.NotFound, 100);
 
-// delete admin from the person table and it will be deleted from admin table ( CASCADE )
+  // to delete the image when the admin item
+  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", data.dataValues.image)
+  clearImage(filePath)
+
+  // delete admin from the person table and it will be deleted from admin table ( CASCADE )
   await data.destroy();
 
   // retrieve the convenient data

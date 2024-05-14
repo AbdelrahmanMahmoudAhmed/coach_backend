@@ -11,16 +11,15 @@ const gettingPath = (req) => {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "client");
   } else if (req.url.includes('/api/admin/admins')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "admin");
-  } else if (req.url.includes('/api/admin/products')) {
+  } else if (req.url.includes('/api/admin/website-management/products')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "product");
-  } else if (req.url.includes('/api/admin/packages')) {
+  } else if (req.url.includes('/api/admin/website-management/packages')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "package");
-  } else if (req.url.includes('/api/admin/sections')) {
+  } else if (req.url.includes('/api/admin/website-management/sections')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "section");
+  }else if(req.url.includes('/api/admin/website-management/certifications')){
+    convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "certification");
   }
-  // else if(req.url.includes('/api/admin/website-management/sections')){
-  //   convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "section");
-  // }
   console.log("convenientPath", convenientPath)
   return convenientPath;
 }

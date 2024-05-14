@@ -111,7 +111,7 @@ const addProduct = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
-    await validationChecker(req, res);
+  await validationChecker(req, res);
   /* ------------------------------- END ------------------------------- */
 
   const image = req.file?.filename;
@@ -130,7 +130,7 @@ const addProduct = controllerWrapper(async (req, res, next) => {
     image,
     type: "product",
   });
-  const { id , ...rest} =  item.dataValues
+  const { id, ...rest } = item.dataValues
 
   // Create a new product associated with the item
   const product = await Product.create({
@@ -157,32 +157,30 @@ const updateProduct = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
-    await validationChecker(req, res);
+  await validationChecker(req, res);
   /* ------------------------------- END ------------------------------- */
 
 
 
 
   const productData = await Product.findOne({ where: { id: productID } });
-  if (!productData ) throw createAppError("This product is not found", HttpStatus.NotFound, 1);
-
-  if(image){   // to delete the old image to replace it with the new one
-
-    const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "product", productData.dataValues.image)
-     clearImage(filePath)
-}
-
-
-
-
+  if (!productData) throw createAppError("This product is not found", HttpStatus.NotFound, 1);
 
 
   const ItemData = await Item.findOne({
     where: { id: productData.dataValues.itemId },
   });
-  if ( !ItemData)
+  if (!ItemData)
     throw createAppError("This product is not found", HttpStatus.NotFound, 1);
 
+
+
+
+    if (image) {   // to delete the old image to replace it with the new one
+      const filePath = path.join(__dirname, "..", "..", "..", "uploads", "product", ItemData.dataValues.image);
+      clearImage(filePath)
+    }
+  
   let updatedData = {}; // to collect updated data on the two tables ( Item + Product )
 
   /* ------------------------------- START ------------------------------- */
@@ -237,8 +235,11 @@ const deleteProduct = controllerWrapper(async (req, res, next) => {
 
   if (!data)
     throw createAppError("This product was not found", HttpStatus.NotFound, 100);
+  // to delete the image when the product item
+  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "product", data.dataValues.image);
 
-  // delete product from the Item table and it will be deleted from product table ( CASCADE )
+  clearImage(filePath)
+  // delete product from the db
   await data.destroy();
 
   // retrieve the convenient data

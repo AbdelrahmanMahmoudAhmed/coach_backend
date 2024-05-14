@@ -356,6 +356,10 @@ const deleteClient = controllerWrapper(async (req, res, next) => {
 
   if (!data) throw createAppError("This client was not found", HttpStatus.NotFound, 100);
 
+
+       // to delete the image when the client item
+       const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", data.dataValues.image)
+       clearImage(filePath)
   // delete client from the person table and it will be deleted from client table ( CASCADE )
   await data.destroy();
 

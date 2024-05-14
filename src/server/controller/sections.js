@@ -34,6 +34,10 @@ const deleteSections = controllerWrapper(async (req, res, next) => {
     const data = await Section.findOne({ where: { id } });
     if (!data) throw createAppError("This section was not found", HttpStatus.NotFound, 100);
 
+  // to delete the image when the section item
+  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "section", data.dataValues.image)
+  clearImage(filePath)
+    // delete from the db
     const deletedItemData = await data.destroy();
     successResponse(res, deletedItemData);
 

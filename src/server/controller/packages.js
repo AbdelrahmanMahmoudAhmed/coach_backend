@@ -192,17 +192,17 @@ const updatePackage = controllerWrapper(async (req, res, next) => {
   const packageData = await Package.findOne({ where: { id: packageId } }); // get the package
   if (!packageData) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
 
-  if(image){ // to delete the old image to replace it with the new one
-
-    const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "package", packageData.dataValues.image)
-     clearImage(filePath)
-}
-
 
   const ItemData = await Item.findOne({     // get the item
     where: { id: packageData.dataValues.itemId },
   });
   if (!ItemData) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
+
+  if(image){ // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "package", ItemData.dataValues.image)
+     clearImage(filePath)
+}
 
   const featuresData = await PackageFeature.findAll({   // get all features
     where: { packageId },
@@ -283,6 +283,10 @@ const deletePackage = controllerWrapper(async (req, res, next) => {
   if (!data)
     throw createAppError("This package was not found", HttpStatus.NotFound, 100);
 
+
+      // to delete the image when the package item
+  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "package", data.dataValues.image)
+  clearImage(filePath)
   // delete package from the Item table and it will be deleted from package table ( CASCADE )
   await data.destroy();
 

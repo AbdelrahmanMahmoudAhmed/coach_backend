@@ -1,4 +1,4 @@
-const { Transformation  } = require("../../models");
+const { Transformation } = require("../../models");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
@@ -20,15 +20,15 @@ const getAllTransformations = controllerWrapper(async (req, res, next) => {
 
 
 const addTransformation = controllerWrapper(async (req, res, next) => {
-  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+  if (!req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
 
   const { descriptionAr, descriptionEn } = req.body;
   const image = req.file?.filename;
-  if(!image){
+  if (!image) {
     throw createAppError("image is required", HttpStatus.BadRequest, 5);
   }
   const requestedTransformation = {
-    image ,
+    image,
     descriptionAr,
     descriptionEn
   }
@@ -42,20 +42,23 @@ const addTransformation = controllerWrapper(async (req, res, next) => {
 
 const deleteTransformation = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
-  if(! req.auth.allowDelete) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+  if (!req.auth.allowDelete) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
 
   const data = await Transformation.findOne({ where: { id } });
-  if (data) {
-    const deletedItemData = await data.destroy();
-    successResponse(res, deletedItemData);
-  } else {
-    throw createAppError("This item was not found", HttpStatus.NotFound, 100);
-  }
+  if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 100);
+
+  // to delete the image when the transformation item
+  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "transformation", data.dataValues.image)
+  clearImage(filePath)
+  // delete from the db
+  const deletedItemData = await data.destroy();
+  successResponse(res, deletedItemData);
+
 });
 
 
 const updateTransformation = controllerWrapper(async (req, res, next) => {
-  if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
+  if (!req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
 
   const { id } = req.params;
   const { descriptionAr, descriptionEn } = req.body;
@@ -63,23 +66,23 @@ const updateTransformation = controllerWrapper(async (req, res, next) => {
   await validationChecker(req, res);
 
   const data = await Transformation.findOne({ where: { id } });
-  if (!data)  throw createAppError("This item was not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 1);
 
-    if(image){ // to delete the old image to replace it with the new one
+  if (image) { // to delete the old image to replace it with the new one
 
-      const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "transformation", data.dataValues.image)
-       clearImage(filePath)
+    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "transformation", data.dataValues.image)
+    clearImage(filePath)
   }
-  
 
 
-    image && (data.image = image);
-    descriptionAr && (data.descriptionAr = descriptionAr);
-    descriptionEn && (data.descriptionEn = descriptionEn);
-    const savedData = await data.save();
 
-    successResponse(res, savedData);
- 
+  image && (data.image = image);
+  descriptionAr && (data.descriptionAr = descriptionAr);
+  descriptionEn && (data.descriptionEn = descriptionEn);
+  const savedData = await data.save();
+
+  successResponse(res, savedData);
+
 });
 
 module.exports = {
