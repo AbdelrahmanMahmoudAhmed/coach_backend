@@ -1,6 +1,6 @@
 // controllers
-const { addQuickAnswer, deleteQuickAnswer , updateQuickAnswer } = require('../../controller/quickAnswers')
-const { addTransformation, updateTransformation,deleteTransformation } = require('../../controller/transformation')
+const { getAllQuickAnswer,addQuickAnswer, deleteQuickAnswer , updateQuickAnswer } = require('../../controller/quickAnswers')
+const { getAllTransformations, addTransformation, updateTransformation,deleteTransformation } = require('../../controller/transformation')
 const { getAllSections, addSections, updateSections,deleteSections } = require('../../controller/sections')
 
 
@@ -27,21 +27,25 @@ const router = express.Router();
 
 
 /* --------------------------------- QUICK ANSWER SECTION --------------------------------- */
+// GET  (/quick_answers) 
+router.get('/quick-answers',isAuth(ADMIN) , addQuickAnswerValidation, getAllQuickAnswer);
 // POST  (/quick_answers) 
-router.post('/quick-answers', addQuickAnswerValidation, addQuickAnswer);
+router.post('/quick-answers', allowToEdit(ADMIN) , addQuickAnswerValidation, addQuickAnswer);
 // DELETE  (/quick_answers) 
-router.delete('/quick-answers/:id', deleteQuickAnswer);
+router.delete('/quick-answers/:id', allowToDelete(ADMIN) ,  deleteQuickAnswer);
 // PATCH  (/quick_answers) 
-router.patch('/quick-answers/:id', updateQuickAnswerValidation  ,updateQuickAnswer);
+router.patch('/quick-answers/:id', allowToEdit(ADMIN) , updateQuickAnswerValidation  ,updateQuickAnswer);
 
 
 /* --------------------------------- TRANSFORMATION SECTION --------------------------------- */
+// GET  (/transformations) 
+router.get('/transformations',isAuth(ADMIN) , addTransformationValidation, getAllTransformations);
 // POST  (/transformations) 
-router.post('/transformations', addTransformationValidation, addTransformation);
+router.post('/transformations',allowToEdit(ADMIN), addTransformationValidation, addTransformation);
 // DELETE  (/transformations) 
-router.delete('/transformations/:id', deleteTransformation);
+router.delete('/transformations/:id', allowToDelete(ADMIN) ,  deleteTransformation);
 // PATCH  (/transformations) 
-router.patch('/transformations/:id', updateTransformationValidation  ,updateTransformation);
+router.patch('/transformations/:id',allowToEdit(ADMIN), updateTransformationValidation  ,updateTransformation);
 
 /* --------------------------------- SECTIONS SECTION --------------------------------- */
 // GET  (/sections) 

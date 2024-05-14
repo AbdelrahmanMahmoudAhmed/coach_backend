@@ -6,6 +6,11 @@ const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
+const path = require('path')
+const clearImage = require('../utils/clearImage')
+
+
+
 // get all packages with pagination
 const getPackage = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
@@ -185,8 +190,15 @@ const updatePackage = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const packageData = await Package.findOne({ where: { id: packageId } }); // get the package
-  if (!packageData)
-    throw createAppError("This package is not found", HttpStatus.NotFound, 1);
+  if (!packageData) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
+
+  if(image){ // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "package", packageData.dataValues.image)
+     clearImage(filePath)
+}
+
+
   const ItemData = await Item.findOne({     // get the item
     where: { id: packageData.dataValues.itemId },
   });

@@ -48,26 +48,29 @@ const updateSections = controllerWrapper(async (req, res, next) => {
 
     const data = await Section.findOne({ where: { id } });
     console.log("data" , data.dataValues.image)
-    if(image){
+
+    if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 1);
+
+    if(image){ // to delete the old image to replace it with the new one
 
         const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "section", data.dataValues.image)
          clearImage(filePath)
     }
-    if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 1);
 
-    // image && (data.image = image);
-    // nameAr && (data.nameAr = nameAr);
-    // nameEn && (data.nameEn = nameEn);
-    // titleAr && (data.titleAr = titleAr);
-    // titleEn && (data.titleEn = titleEn);
-    // contentAr && (data.contentAr = contentAr);
-    // contentEn && (data.contentEn = contentEn);
-    // link && (data.link = link);
-    // callToAction && (data.callToAction = callToAction);
 
-    // const savedData = await data.save();
+    image && (data.image = image);
+    nameAr && (data.nameAr = nameAr);
+    nameEn && (data.nameEn = nameEn);
+    titleAr && (data.titleAr = titleAr);
+    titleEn && (data.titleEn = titleEn);
+    contentAr && (data.contentAr = contentAr);
+    contentEn && (data.contentEn = contentEn);
+    link && (data.link = link);
+    callToAction && (data.callToAction = callToAction);
 
-    // successResponse(res, savedData);
+    const savedData = await data.save();
+
+    successResponse(res, savedData);
 
 });
 

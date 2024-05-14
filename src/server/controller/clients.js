@@ -1,4 +1,4 @@
-const { sequelize, Person , Client } = require("../../models");
+const { sequelize, Person, Client } = require("../../models");
 const { Op } = require('sequelize');
 
 const { createAppError } = require("../utils/error");
@@ -8,6 +8,8 @@ const { hashPassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
+const path = require('path')
+const clearImage = require('../utils/clearImage')
 
 
 
@@ -28,10 +30,10 @@ const getClients = controllerWrapper(async (req, res, next) => {
           { name: { [Op.like]: `%${searchTerm}%` } },
           { email: { [Op.like]: `%${searchTerm}%` } },
         ],
-        
+
       },
     },
-  
+
 
   });
   /* ------------------------------- END ------------------------------- */
@@ -55,7 +57,7 @@ const getClients = controllerWrapper(async (req, res, next) => {
     return { id: client.dataValues.id, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
   })
 
-  successResponse(res, manipulatedData, 200, [{pagination :{ currentPage: page, perPage, totalCount} } ]);
+  successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
 });
 
 
@@ -68,7 +70,7 @@ const getClients = controllerWrapper(async (req, res, next) => {
 const getSingleClient = controllerWrapper(async (req, res, next) => {
   const clientId = req.params.id;
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
-  if(!data)  throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
   const { id, password, ...rest } = data.dataValues.Person.dataValues
 
@@ -84,7 +86,7 @@ const getSingleClient = controllerWrapper(async (req, res, next) => {
 
 // add new client
 const addClient = controllerWrapper(async (req, res, next) => {
-  const { name, email, password, passwordConfirmation, phone, goal , tall , weight } = req.body;
+  const { name, email, password, passwordConfirmation, phone, goal, tall, weight } = req.body;
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -152,7 +154,7 @@ const addClient = controllerWrapper(async (req, res, next) => {
 // update client
 const updateClient = controllerWrapper(async (req, res, next) => {
   const clientId = req.params.id;
-  const { name, email, password, passwordConfirmation, phone, goal , tall , weight } = req.body;
+  const { name, email, password, passwordConfirmation, phone, goal, tall, weight } = req.body;
   const image = req.file?.filename;
 
 
@@ -164,9 +166,17 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData ) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!clientData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if ( !personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+
+
+
+  if (image) { // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
+    clearImage(filePath)
+  }
 
 
   /* ------------------------------- START ------------------------------- */
@@ -219,8 +229,8 @@ const updateClient = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  if(savedPersonData){
-    const { id, password , ...rest } = savedPersonData.dataValues
+  if (savedPersonData) {
+    const { id, password, ...rest } = savedPersonData.dataValues
     updatedData = { ...updatedData, ...rest }
   }
 
@@ -238,7 +248,7 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 const updateMe = controllerWrapper(async (req, res, next) => {
 
   const clientId = req.auth.id;
-  const { name, email, password, passwordConfirmation, phone , tall ,weight , goal} = req.body;
+  const { name, email, password, passwordConfirmation, phone, tall, weight, goal } = req.body;
   const image = req.file?.filename;
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -247,7 +257,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData ) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!clientData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
   if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
@@ -280,7 +290,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   let updatedData = {} // to collect updated data on the two tables ( Person + client )
 
 
-  
+
   /* ------------------------------- START ------------------------------- */
   // changing data on the Client table
   tall && (clientData.tall = tall);
@@ -301,9 +311,9 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   image && (personData.image = image);
 
   const savedPersonData = await personData.save();
-  if(savedPersonData){
-    const { id, password , ...rest } = savedPersonData.dataValues
-    updatedData = { ...updatedData , ...rest }
+  if (savedPersonData) {
+    const { id, password, ...rest } = savedPersonData.dataValues
+    updatedData = { ...updatedData, ...rest }
   }
 
   /* ------------------------------- END ------------------------------- */
@@ -318,16 +328,16 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
 // get single client client using id
 const getMe = controllerWrapper(async (req, res, next) => {
-    const clientId = req.auth.id;
-    const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
-    if(!data)  throw createAppError("This client is not found", HttpStatus.NotFound, 1);
-  
-    const { id, password, ...rest } = data.dataValues.Person.dataValues
-  
-    const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
-    successResponse(res, manipulatedData);
-  });
-  
+  const clientId = req.auth.id;
+  const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
+  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+
+  const { id, password, ...rest } = data.dataValues.Person.dataValues
+
+  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  successResponse(res, manipulatedData);
+});
+
 
 
 
@@ -340,13 +350,13 @@ const deleteClient = controllerWrapper(async (req, res, next) => {
 
   const theClient = await Client.findOne({ where: { id: clientId }, include: 'Person' });
 
-  if(!theClient) throw createAppError("This client was not found", HttpStatus.BadRequest, 100);
-  const { id, password , ...rest } = theClient.dataValues.Person.dataValues
+  if (!theClient) throw createAppError("This client was not found", HttpStatus.BadRequest, 100);
+  const { id, password, ...rest } = theClient.dataValues.Person.dataValues
   const data = await Person.findOne({ where: { id } });
 
   if (!data) throw createAppError("This client was not found", HttpStatus.NotFound, 100);
 
-// delete client from the person table and it will be deleted from client table ( CASCADE )
+  // delete client from the person table and it will be deleted from client table ( CASCADE )
   await data.destroy();
 
   // retrieve the convenient data

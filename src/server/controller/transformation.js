@@ -5,6 +5,14 @@ const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
+
+const path = require('path')
+const clearImage = require('../utils/clearImage')
+
+
+
+
+
 const getAllTransformations = controllerWrapper(async (req, res, next) => {
   const data = await Transformation.findAll();
   successResponse(res, data);
@@ -55,17 +63,23 @@ const updateTransformation = controllerWrapper(async (req, res, next) => {
   await validationChecker(req, res);
 
   const data = await Transformation.findOne({ where: { id } });
-  if (data) {
+  if (!data)  throw createAppError("This item was not found", HttpStatus.NotFound, 1);
+
+    if(image){ // to delete the old image to replace it with the new one
+
+      const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "transformation", data.dataValues.image)
+       clearImage(filePath)
+  }
+  
+
+
     image && (data.image = image);
     descriptionAr && (data.descriptionAr = descriptionAr);
     descriptionEn && (data.descriptionEn = descriptionEn);
-
     const savedData = await data.save();
 
     successResponse(res, savedData);
-  } else {
-    throw createAppError("This item was not found", HttpStatus.NotFound, 1);
-  }
+ 
 });
 
 module.exports = {

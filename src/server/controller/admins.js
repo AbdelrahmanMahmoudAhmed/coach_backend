@@ -8,7 +8,8 @@ const { hashPassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
-
+const path = require('path')
+const clearImage = require('../utils/clearImage')
 
 
 // get all admins with pagination
@@ -181,6 +182,15 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   if (!adminData ) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
   if ( !personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+
+
+
+
+  if (image) { // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", personData.dataValues.image)
+    clearImage(filePath)
+  }
 
 
   /* ------------------------------- START ------------------------------- */

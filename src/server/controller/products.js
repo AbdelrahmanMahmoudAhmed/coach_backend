@@ -7,6 +7,14 @@ const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 
+const path = require('path')
+const clearImage = require('../utils/clearImage')
+
+
+
+
+
+
 // get all products with pagination
 const getProducts = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
@@ -152,9 +160,23 @@ const updateProduct = controllerWrapper(async (req, res, next) => {
     await validationChecker(req, res);
   /* ------------------------------- END ------------------------------- */
 
+
+
+
   const productData = await Product.findOne({ where: { id: productID } });
-  if (!productData )
-    throw createAppError("This product is not found", HttpStatus.NotFound, 1);
+  if (!productData ) throw createAppError("This product is not found", HttpStatus.NotFound, 1);
+
+  if(image){   // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "product", productData.dataValues.image)
+     clearImage(filePath)
+}
+
+
+
+
+
+
   const ItemData = await Item.findOne({
     where: { id: productData.dataValues.itemId },
   });

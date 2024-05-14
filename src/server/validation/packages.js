@@ -172,21 +172,5 @@ const updatePackageValidation = checkSchema({
 });
 
 
-// const validateFeatures = (value) => {
-//   if (!Array.isArray(value) || value.length === 0) {
-//     throw new Error(' array must contain at least one element');
-//   }
-//   for (const obj of value) {
-//     if (typeof obj !== 'object' || Object.values(obj).some(val => (typeof val !== 'string') || (val == ''))) {
-
-//       console.log("hellooooooooo")
-//       throw new Error('Each element of the nested array must be an object with string values');
-//     }
-//     if( !obj['featureEn'] || !obj['featureAr'] ){
-//       throw new Error('Each element of the nested array must be an object with string values');
-//     }
-//   }
-//   return true; // Validation passed
-// }
 
 module.exports = { addPackageValidation, updatePackageValidation };
