@@ -8,6 +8,7 @@ const { getProducts , getSingleProduct , deleteProduct , updateProduct , addProd
 const { getAllBlogs ,getSingleBlog , addBlog , deleteBlog , updateBlog} = require('../../controller/blogs');
 const { getAllVideos ,addVideo , deleteVideo , updateVideo} = require('../../controller/videos');
 const { getAllMessages , deleteMessage} = require('../../controller/contactUs');
+const { getLayout , updateLayout } = require('../../controller/layout')
 
 
 // validation
@@ -19,9 +20,10 @@ const {addPackageValidation , updatePackageValidation } = require('../../validat
 const {addProductValidation , updateProductValidation } = require('../../validation/product');
 const {addBlogValidation , updateBlogValidation } = require('../../validation/blogs');
 const {addVideoValidation , updateVideoValidation } = require('../../validation/videos');
+const { manageLayout } = require('../../validation/layout');
 
 // middlewares
-const {  allowToDelete , allowToEdit , isAuth} = require('../../middleware/isAuth');
+const { isAuth , allowToManageWebsite} = require('../../middleware/isAuth');
 const {ADMIN} = require('../../../constant/roles')
 const express = require('express');
 
@@ -41,45 +43,45 @@ const router = express.Router();
 // GET  (/quick_answers) 
 router.get('/quick-answers',isAuth(ADMIN) , addQuickAnswerValidation, getAllQuickAnswer);
 // POST  (/quick_answers) 
-router.post('/quick-answers', allowToEdit(ADMIN) , addQuickAnswerValidation, addQuickAnswer);
+router.post('/quick-answers', allowToManageWebsite(ADMIN) , addQuickAnswerValidation, addQuickAnswer);
 // DELETE  (/quick_answers) 
-router.delete('/quick-answers/:id', allowToDelete(ADMIN) ,  deleteQuickAnswer);
+router.delete('/quick-answers/:id', allowToManageWebsite(ADMIN) ,  deleteQuickAnswer);
 // PATCH  (/quick_answers) 
-router.patch('/quick-answers/:id', allowToEdit(ADMIN) , updateQuickAnswerValidation  ,updateQuickAnswer);
+router.patch('/quick-answers/:id', allowToManageWebsite(ADMIN) , updateQuickAnswerValidation  ,updateQuickAnswer);
 
 
 /* --------------------------------- TRANSFORMATION SECTION --------------------------------- */
 // GET  (/transformations) 
 router.get('/transformations',isAuth(ADMIN) , addTransformationValidation, getAllTransformations);
 // POST  (/transformations) 
-router.post('/transformations',allowToEdit(ADMIN), addTransformationValidation, addTransformation);
+router.post('/transformations',allowToManageWebsite(ADMIN), addTransformationValidation, addTransformation);
 // DELETE  (/transformations) 
-router.delete('/transformations/:id', allowToDelete(ADMIN) ,  deleteTransformation);
+router.delete('/transformations/:id', allowToManageWebsite(ADMIN) ,  deleteTransformation);
 // PATCH  (/transformations) 
-router.patch('/transformations/:id',allowToEdit(ADMIN), updateTransformationValidation  ,updateTransformation);
+router.patch('/transformations/:id',allowToManageWebsite(ADMIN), updateTransformationValidation  ,updateTransformation);
 
 /* --------------------------------- SECTIONS SECTION --------------------------------- */
 // GET  (/sections) 
 router.get('/sections', isAuth(ADMIN) , getAllSections);
 // POST  (/sections) 
-router.post('/sections', allowToEdit(ADMIN) , sectionValidation, addSections);
+router.post('/sections', allowToManageWebsite(ADMIN) , sectionValidation, addSections);
 // DELETE  (/sections) 
-router.delete('/sections/:id', allowToDelete(ADMIN) , deleteSections);
+router.delete('/sections/:id', allowToManageWebsite(ADMIN) , deleteSections);
 // PATCH  (/sections) 
-router.patch('/sections/:id', allowToEdit(ADMIN) , sectionValidation  ,updateSections);
+router.patch('/sections/:id', allowToManageWebsite(ADMIN) , sectionValidation  ,updateSections);
 
 /* --------------------------------- CERTIFICATIONS SECTION --------------------------------- */
 
 // GET  (/certifications) 
 router.get('/certifications',isAuth(ADMIN)  , getAllCertifications);
 // GET  (/certifications) 
-router.get('/certifications/:id',  allowToEdit(ADMIN) , getCertification);
+router.get('/certifications/:id',  allowToManageWebsite(ADMIN) , getCertification);
 // POST  (/certifications) 
-router.post('/certifications/', allowToEdit(ADMIN) , addCertificationValidation, addCertifications);
+router.post('/certifications/', allowToManageWebsite(ADMIN) , addCertificationValidation, addCertifications);
 // // DELETE  (/certifications) 
-router.delete('/certifications/:id', allowToDelete(ADMIN) , deleteCertifications);
+router.delete('/certifications/:id', allowToManageWebsite(ADMIN) , deleteCertifications);
 // // PATCH  (/certifications) 
-router.patch('/certifications/:id', allowToEdit(ADMIN) , updateCertificationValidation  ,updateCertifications);
+router.patch('/certifications/:id', allowToManageWebsite(ADMIN) , updateCertificationValidation  ,updateCertifications);
 
 
 /* --------------------------------- PACKAGES SECTION --------------------------------- */
@@ -89,11 +91,11 @@ router.get('/packages/',isAuth(ADMIN) , getPackage);
 // GET  (/packages) 
 router.get('/packages/:id',isAuth(ADMIN)  , getSinglePackage);
 // POST  (/packages) 
-router.post('/packages/', allowToEdit(ADMIN) , addPackageValidation, addPackage);
+router.post('/packages/', allowToManageWebsite(ADMIN) , addPackageValidation, addPackage);
 // // DELETE  (/packages) 
-router.delete('/packages/:id', allowToDelete(ADMIN) , deletePackage);
+router.delete('/packages/:id', allowToManageWebsite(ADMIN) , deletePackage);
 // // PATCH  (/packages) 
-router.patch('/packages/:id', allowToEdit(ADMIN) , updatePackageValidation  ,updatePackage);
+router.patch('/packages/:id', allowToManageWebsite(ADMIN) , updatePackageValidation  ,updatePackage);
 
 /* --------------------------------- PRODUCTS SECTION --------------------------------- */
 // GET  (/products-management) 
@@ -101,11 +103,11 @@ router.get('/products/',isAuth(ADMIN) ,  getProducts);
 // GET  (/products-management) 
 router.get('/products/:id',isAuth(ADMIN) ,  getSingleProduct);
 // POST  (/products-management) 
-router.post('/products/', allowToEdit(ADMIN) , addProductValidation, addProduct);
+router.post('/products/', allowToManageWebsite(ADMIN) , addProductValidation, addProduct);
 // // DELETE  (/products-management) 
-router.delete('/products/:id', allowToDelete(ADMIN) , deleteProduct);
+router.delete('/products/:id', allowToManageWebsite(ADMIN) , deleteProduct);
 // // PATCH  (/products-management) 
-router.patch('/products/:id', allowToEdit(ADMIN) , updateProductValidation  ,updateProduct);
+router.patch('/products/:id', allowToManageWebsite(ADMIN) , updateProductValidation  ,updateProduct);
 
 /* --------------------------------- BLOGS SECTION --------------------------------- */
 // GET  (/blogs-management) 
@@ -113,29 +115,35 @@ router.get('/blogs/',isAuth(ADMIN) , getAllBlogs );
 // GET  (/blogs-management) 
 router.get('/blogs/:id',isAuth(ADMIN) ,  getSingleBlog);
 // POST  (/blogs-management) 
-router.post('/blogs/', allowToEdit(ADMIN) , addBlogValidation, addBlog);
+router.post('/blogs/', allowToManageWebsite(ADMIN) , addBlogValidation, addBlog);
 // // DELETE  (/blogs-management) 
-router.delete('/blogs/:id', allowToDelete(ADMIN) , deleteBlog);
+router.delete('/blogs/:id', allowToManageWebsite(ADMIN) , deleteBlog);
 // // PATCH  (/blogs-management) 
-router.patch('/blogs/:id', allowToEdit(ADMIN) , updateBlogValidation  ,updateBlog);
+router.patch('/blogs/:id', allowToManageWebsite(ADMIN) , updateBlogValidation  ,updateBlog);
 
 
 /* --------------------------------- VIDEOS SECTION --------------------------------- */
 // GET  (/videos-management) 
 router.get('/videos/',isAuth(ADMIN) , getAllVideos );
 // POST  (/videos-management) 
-router.post('/videos/', allowToEdit(ADMIN) , addVideoValidation, addVideo);
+router.post('/videos/', allowToManageWebsite(ADMIN) , addVideoValidation, addVideo);
 // // DELETE  (/videos-management) 
-router.delete('/videos/:id', allowToDelete(ADMIN) , deleteVideo);
+router.delete('/videos/:id', allowToManageWebsite(ADMIN) , deleteVideo);
 // // PATCH  (/videos-management) 
-router.patch('/videos/:id', allowToEdit(ADMIN) , updateVideoValidation  ,updateVideo);
+router.patch('/videos/:id', allowToManageWebsite(ADMIN) , updateVideoValidation  ,updateVideo);
 
 
 /* --------------------------------- CONTACT US SECTION --------------------------------- */
-// GET  (/videos-management) 
+// GET  (/contact-us-management) 
 router.get('/contact-us/',isAuth(ADMIN) , getAllMessages );
-// // DELETE  (/videos-management) 
-router.delete('/contact-us/:id', allowToDelete(ADMIN) , deleteMessage);
+// // DELETE  (/contact-us-management) 
+router.delete('/contact-us/:id', allowToManageWebsite(ADMIN) , deleteMessage);
+
+/* --------------------------------- LAYOUT SECTION --------------------------------- */
+// GET  (/layout-management) 
+router.get('/layout/',isAuth(ADMIN) , getLayout );
+// // UPDATE  (/layout-management) 
+router.patch('/layout', manageLayout , allowToManageWebsite(ADMIN) , updateLayout);
 
 
 

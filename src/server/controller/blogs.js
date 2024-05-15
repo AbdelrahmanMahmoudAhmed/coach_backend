@@ -1,10 +1,9 @@
-const { Blog, Certification } = require("../../models");
+const { Blog } = require("../../models");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-
 const path = require('path')
 const clearImage = require('../utils/clearImage')
 

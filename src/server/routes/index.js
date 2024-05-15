@@ -11,6 +11,7 @@ const products = require("./products");
 const sections = require("./sections");
 const contactUs = require("./contactUs");
 const videos = require("./videos");
+const layout = require("./layout");
 const certifications = require("./certifications");
 const blogs = require("./blogs");
 const manageWebsite = require("./admin/manageWebsite");
@@ -34,6 +35,7 @@ const setupApiRouters = (app) => {
   router.use("/blogs", blogs);
   router.use("/videos", videos);
   router.use("/contact-us", contactUs);
+  router.use("/layout", layout);
   
 
   /* ------------------------------- WEBSITE AUTH ------------------------------- */
