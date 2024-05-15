@@ -9,6 +9,8 @@ const transformations = require("./transformation");
 const packages = require("./packages");
 const products = require("./products");
 const sections = require("./sections");
+const contactUs = require("./contactUs");
+const videos = require("./videos");
 const certifications = require("./certifications");
 const blogs = require("./blogs");
 const manageWebsite = require("./admin/manageWebsite");
@@ -30,6 +32,8 @@ const setupApiRouters = (app) => {
   router.use("/sections", sections);
   router.use("/certifications", certifications);
   router.use("/blogs", blogs);
+  router.use("/videos", videos);
+  router.use("/contact-us", contactUs);
   
 
   /* ------------------------------- WEBSITE AUTH ------------------------------- */

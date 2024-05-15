@@ -116,15 +116,6 @@ const updateBlogValidation = checkSchema({
 });
 
 
-const validateType = (req, res, next) => {
-    if (req.body.type !== 'pic'){
-        req.body.image = null;
-        req.file = null;
-    }
-
-    
-    next()
-}
 
 
-module.exports = { addBlogValidation, updateBlogValidation , validateType }
+module.exports = { addBlogValidation, updateBlogValidation  }
