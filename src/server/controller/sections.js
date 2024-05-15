@@ -16,7 +16,6 @@ const getAllSections = controllerWrapper(async (req, res, next) => {
 const addSections = controllerWrapper(async (req, res, next) => {
 
 
-    console.log("adding___________________________________")
 
     const { nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction } = req.body;
     const image = req.file?.filename;
@@ -51,7 +50,6 @@ const updateSections = controllerWrapper(async (req, res, next) => {
 
 
     const data = await Section.findOne({ where: { id } });
-    console.log("data" , data.dataValues.image)
 
     if (!data) throw createAppError("This item was not found", HttpStatus.NotFound, 1);
 

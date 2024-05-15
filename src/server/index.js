@@ -25,7 +25,6 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json()); // application/json
-
 app.use(formDataMiddleware); // adding form data according to the request route
 
 

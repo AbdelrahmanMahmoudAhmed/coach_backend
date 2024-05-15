@@ -33,7 +33,7 @@ const addAdminValidation =  checkSchema({
         optional:false,
         trim:true,
         isIn: {
-            options: ['admin', 'superAdmin'],
+            options: [['admin', 'superAdmin']],
             errorMessage: 'must be admin or superAdmin'
         },
     },
@@ -112,7 +112,7 @@ const updateAdminValidation =  checkSchema({
         optional:true,
         trim:true,
         isIn: {
-            options: ['admin', 'superAdmin'],
+            options: [['admin', 'superAdmin']],
             errorMessage: 'must be admin or superAdmin'
         },
     },

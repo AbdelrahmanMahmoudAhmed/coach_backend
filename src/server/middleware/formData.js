@@ -3,6 +3,7 @@ const multerMW = multer();
 const path = require('path')
 
 const gettingPath = (req) => {
+
   let convenientPath;
 
   if (req.url.includes('/api/admin/website-management/transformations')) {
@@ -19,8 +20,11 @@ const gettingPath = (req) => {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "section");
   }else if(req.url.includes('/api/admin/website-management/certifications')){
     convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "certification");
+  } else if(req.url.includes('/api/admin/website-management/blogs') ){
+    convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "blog");
   }
-  console.log("convenientPath", convenientPath)
+
+
   return convenientPath;
 }
 
@@ -57,6 +61,7 @@ const imageFilter = function (req, file, cb) {
 const imageUpload = multer({ storage: imageStorage, fileFilter: imageFilter });
 const formDataMiddleware = (req, res, next) => {
   if (gettingPath(req)) {
+ 
     // Apply single file upload middleware to store products files
     imageUpload.single('image')(req, res, next);
   } else {

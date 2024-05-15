@@ -559,7 +559,11 @@ module.exports = {
       },
       link: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
+      },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       type: {
         type: Sequelize.ENUM('video', 'pic'),

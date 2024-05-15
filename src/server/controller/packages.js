@@ -253,7 +253,6 @@ const updatePackage = controllerWrapper(async (req, res, next) => {
   }
   updatedFeatures ? updatedData = { ...updatedData, packageFeatures:updatedFeatures   } : updatedData = { ...updatedData,  packageFeatures :featuresData   }
 
-console.log("_______________+++______________" , featuresData)
   /* ------------------------------- END ------------------------------- */
 
 

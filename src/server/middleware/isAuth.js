@@ -32,7 +32,7 @@ exports.isAuth = function (type) {
 exports.isSuperAdmin = function (type) {
     return function (req, res, next) {
         const result = changingToken(req, type)
-        console.log("result" , result)
+    
         if (result.role != SUPPER_ADMIN) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         next();
     }
@@ -41,7 +41,7 @@ exports.isSuperAdmin = function (type) {
 exports.allowToDelete = function (type) {
     return function (req, res, next) {
         const result = changingToken(req, type)
-        console.log("result" , result)
+       
         if (!result.allowDelete) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         next();
     }
@@ -49,7 +49,7 @@ exports.allowToDelete = function (type) {
 exports.allowToEdit = function (type) {
     return function (req, res, next) {
         const result = changingToken(req, type)
-        console.log("result" , result)
+      
         if (!result.allowEdit) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         next();
     }
@@ -57,7 +57,7 @@ exports.allowToEdit = function (type) {
 exports.allowToManageWebsite = function (type) {
     return function (req, res, next) {
         const result = changingToken(req, type)
-        console.log("result" , result)
+  
         if (!result.websiteManagement) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         next();
     }

@@ -35,15 +35,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         link: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
+        },
+        image: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         type: {
             type: DataTypes.ENUM('video', 'pic'),
             allowNull: false,
           },
-
-
-
     }, {
         sequelize,
         tableName: 'blogs',

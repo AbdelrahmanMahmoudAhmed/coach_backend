@@ -62,7 +62,6 @@ const getProducts = controllerWrapper(async (req, res, next) => {
       [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
     },
   });
-  console.log("data", data);
   const manipulatedData = data.map((product) => {
     const { id, ...rest } = product.dataValues.Item.dataValues;
     return {

@@ -4,7 +4,8 @@ const { getAllTransformations, addTransformation, updateTransformation,deleteTra
 const { getAllSections, addSections, updateSections,deleteSections } = require('../../controller/sections')
 const {getCertification, getAllCertifications  , deleteCertifications , updateCertifications, addCertifications  } = require('../../controller/certifications')
 const { getPackage , getSinglePackage , deletePackage , updatePackage, addPackage  } = require('../../controller/packages')
-const { getProducts , getSingleProduct , deleteProduct , updateProduct , addProduct  } = require('../../controller/products')
+const { getProducts , getSingleProduct , deleteProduct , updateProduct , addProduct  } = require('../../controller/products');
+const { getAllBlogs ,getSingleBlog , addBlog , deleteBlog , updateBlog} = require('../../controller/blogs');
 
 
 // validation
@@ -14,6 +15,7 @@ const sectionValidation = require('../../validation/sections');
 const {addCertificationValidation , updateCertificationValidation } = require('../../validation/certifications');
 const {addPackageValidation , updatePackageValidation } = require('../../validation/packages');
 const {addProductValidation , updateProductValidation } = require('../../validation/product');
+const {addBlogValidation , updateBlogValidation , validateType} = require('../../validation/blogs');
 
 // middlewares
 const {  allowToDelete , allowToEdit , isAuth} = require('../../middleware/isAuth');
@@ -91,8 +93,6 @@ router.delete('/packages/:id', allowToDelete(ADMIN) , deletePackage);
 router.patch('/packages/:id', allowToEdit(ADMIN) , updatePackageValidation  ,updatePackage);
 
 /* --------------------------------- PRODUCTS SECTION --------------------------------- */
-
-
 // GET  (/products-management) 
 router.get('/products/', allowToEdit(ADMIN),  getProducts);
 // GET  (/products-management) 
@@ -103,6 +103,18 @@ router.post('/products/', allowToEdit(ADMIN) , addProductValidation, addProduct)
 router.delete('/products/:id', allowToDelete(ADMIN) , deleteProduct);
 // // PATCH  (/products-management) 
 router.patch('/products/:id', allowToEdit(ADMIN) , updateProductValidation  ,updateProduct);
+
+/* --------------------------------- BLOGS SECTION --------------------------------- */
+// GET  (/products-management) 
+router.get('/blogs/', allowToEdit(ADMIN), getAllBlogs );
+// GET  (/blogs-management) 
+router.get('/blogs/:id', allowToEdit(ADMIN),  getSingleBlog);
+// POST  (/blogs-management) 
+router.post('/blogs/', allowToEdit(ADMIN) , addBlogValidation, addBlog);
+// // DELETE  (/blogs-management) 
+router.delete('/blogs/:id', allowToDelete(ADMIN) , deleteBlog);
+// // PATCH  (/blogs-management) 
+router.patch('/blogs/:id', allowToEdit(ADMIN) , updateBlogValidation  ,updateBlog);
 
 
 module.exports = router;
