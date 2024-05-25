@@ -180,15 +180,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      type: {
-        type: Sequelize.ENUM('product', 'package'),
+      // type: {
+      //   type: Sequelize.ENUM('product', 'package'),
+      //   allowNull: false,
+      // },
+      clientId: {
         allowNull: false,
+        type: Sequelize.INTEGER,
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
+        references: {
+          model: "clients",
+          key: "id",
+        }
       },
       isPaid: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
       },
+      totalPrice:{
+        type: Sequelize.INTEGER,
+        defaultValue:0,
+        allowNull: false,
+    },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -246,7 +261,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('clientOrders', {
+    await queryInterface.createTable('itemOrders', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -256,7 +271,6 @@ module.exports = {
       orderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        unique: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         references: {
@@ -264,16 +278,23 @@ module.exports = {
           key: "id",
         }
       },
-      clientId: {
+      itemId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        unique: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         references: {
-          model: "orders",
+          model: "items",
           key: "id",
         }
+      },
+      type:{
+        type: Sequelize.ENUM('product', 'package'),
+        allowNull: false,
+    },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -295,17 +316,17 @@ module.exports = {
         type: Sequelize.ENUM('ordered', 'prepared', 'shipped', 'arrived'),
         allowNull: false,
       },
-      orderId: {
+      itemOrderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         references: {
-          model: "orders",
-          key: "id",
+            model: "itemOrders",
+            key: "id",
         }
-      },
+    },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -350,17 +371,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      orderId: {
+      itemOrderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         unique: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         references: {
-          model: "orders",
-          key: "id",
+            model: "itemOrders",
+            key: "id",
         }
-      },
+    },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -370,44 +391,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('itemOrders', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      orderId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        unique: true,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        references: {
-          model: "orders",
-          key: "id",
-        }
-      },
-      itemId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        unique: true,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        references: {
-          model: "items",
-          key: "id",
-        }
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+
     await queryInterface.createTable('packages', {
       id: {
         allowNull: false,
@@ -495,6 +479,74 @@ module.exports = {
           model: "packages",
           key: "id",
         }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+    await queryInterface.createTable('carts', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+  
+      clientId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        unique:true,
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
+        references: {
+          model: "clients",
+          key: "id",
+        }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+    await queryInterface.createTable('cartItems', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      itemId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        references: {
+          model: "items",
+          key: "id",
+        },
+      },
+      cartId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        references: {
+          model: "carts",
+          key: "id",
+        },
+      },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
@@ -658,8 +710,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-    
+    });    
     await queryInterface.createTable('quickAnswers', {
       id: {
         allowNull: false,
@@ -832,7 +883,6 @@ module.exports = {
     await queryInterface.dropTable('clients');
 
     await queryInterface.dropTable('orders');
-    await queryInterface.dropTable('clientOrders');
     await queryInterface.dropTable('productOrders');
     await queryInterface.dropTable('packageOrders');
     await queryInterface.dropTable('itemOrders');
@@ -840,6 +890,8 @@ module.exports = {
     await queryInterface.dropTable('products');
     await queryInterface.dropTable('packages');
     await queryInterface.dropTable('packageFeatures');
+    await queryInterface.dropTable('carts');
+    await queryInterface.dropTable('cartItems');
     //website
     await queryInterface.dropTable('settings');
     await queryInterface.dropTable('blogs');

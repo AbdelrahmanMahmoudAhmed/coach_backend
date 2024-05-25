@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({ Order }) {
+        static associate({ ItemOrder }) {
             // define association here
-            this.belongsTo(Order, { foreignKey: 'orderId' })
+            this.belongsTo(ItemOrder, { foreignKey: 'itemOrderId' })
 
         }
     }
@@ -45,14 +45,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        orderId: {
+        itemOrderId: {
             allowNull: false,
             type: DataTypes.INTEGER,
             unique: true,
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
             references: {
-                model: "orders",
+                model: "itemOrders",
                 key: "id",
             }
         },

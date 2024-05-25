@@ -9,10 +9,12 @@ module.exports = (sequelize, DataTypes) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({ Order, Item }) {
+        static associate({ Order, Item ,PackageOrder , ProductOrder}) {
             // define association here
-            this.belongsTo(Order, { foreignKey: 'orderId' })
-            this.belongsTo(Item, { foreignKey: 'itemId' })
+            this.belongsTo(Order, { foreignKey: 'orderId' });
+            this.belongsTo(Item, { foreignKey: 'itemId' });
+            this.hasOne(PackageOrder, { foreignKey: 'itemOrderId' });
+            this.hasOne(ProductOrder, { foreignKey: 'itemOrderId' });
 
         }
     }
@@ -20,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         orderId: {
             allowNull: false,
             type: DataTypes.INTEGER,
-            unique: true,
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
             references: {
@@ -31,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         itemId: {
             allowNull: false,
             type: DataTypes.INTEGER,
-            unique: true,
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
             references: {
@@ -39,7 +39,14 @@ module.exports = (sequelize, DataTypes) => {
                 key: "id",
             }
         },
-
+                type:{
+            type: DataTypes.ENUM('product', 'package'),
+            allowNull: false,
+        },
+        quantity: {
+            allowNull: false,
+            type: DataTypes.INTEGER,
+          },
     }, {
         sequelize,
         tableName: 'itemOrders',
