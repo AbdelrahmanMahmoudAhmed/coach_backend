@@ -20,6 +20,7 @@ const manageClients = require("./admin/manageClients");
 const adminAuth = require("./admin/auth");
 const clientAuth = require("./auth/auth");
 const clientManagement = require("./client/manageClient");
+const clientCart = require("./client/cart");
 
 
 const setupApiRouters = (app) => {
@@ -42,6 +43,10 @@ const setupApiRouters = (app) => {
   // website auth
   router.use("/auth", clientAuth);
   router.use('/me', clientManagement)
+
+  /* ------------------------------- CLIENTS'S CART ------------------------------- */
+  router.use('/client/cart', clientCart)
+
 
   /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
   // admin auth

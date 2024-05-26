@@ -489,34 +489,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.createTable('carts', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-  
-      clientId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        unique:true,
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',
-        references: {
-          model: "clients",
-          key: "id",
-        }
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+
     await queryInterface.createTable('cartItems', {
       id: {
         allowNull: false,
@@ -534,13 +507,13 @@ module.exports = {
           key: "id",
         },
       },
-      cartId: {
+      clientId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
         references: {
-          model: "carts",
+          model: "clients",
           key: "id",
         },
       },
@@ -890,7 +863,6 @@ module.exports = {
     await queryInterface.dropTable('products');
     await queryInterface.dropTable('packages');
     await queryInterface.dropTable('packageFeatures');
-    await queryInterface.dropTable('carts');
     await queryInterface.dropTable('cartItems');
     //website
     await queryInterface.dropTable('settings');

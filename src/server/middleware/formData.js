@@ -5,10 +5,10 @@ const path = require('path')
 const gettingPath = (req) => {
 
   let convenientPath;
-
+  
   if (req.url.includes('/api/admin/website-management/transformations')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "transformation");
-  } else if (req.url.includes('/api/admin/clients-management')) {
+  } else if (req.url.includes('/api/admin/clients-management') ||req.url.includes('/api/auth/sign-in')  ) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "client");
   } else if (req.url.includes('/api/admin/admins')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "admin");

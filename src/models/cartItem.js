@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Item, Cart }) {
+    static associate({ Item, Client }) {
       // define association here
       this.belongsTo(Item, { foreignKey: "itemId" });
-      this.belongsTo(Cart, { foreignKey: "cartId" });
+      this.belongsTo(Client, { foreignKey: "clientId" });
     }
   }
   CartItem.init(
@@ -31,13 +31,13 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      cartId: {
+      clientId: {
         allowNull: false,
         type: DataTypes.INTEGER,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
         references: {
-          model: "carts",
+          model: "clients",
           key: "id",
         },
       },

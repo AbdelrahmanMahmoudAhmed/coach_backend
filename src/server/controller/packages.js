@@ -70,7 +70,8 @@ const getPackage = controllerWrapper(async (req, res, next) => {
       id: package.dataValues.id,
       ...rest,
       period: package.dataValues.period,
-      PackageFeatures: package.dataValues.PackageFeatures
+      itemId: package.dataValues.itemId,
+      PackageFeatures: package.dataValues.PackageFeatures,
     };
   });
 
@@ -94,7 +95,9 @@ const getSinglePackage = controllerWrapper(async (req, res, next) => {
     id: data.dataValues.id,
     ...rest,
     period: data.dataValues.period,
-    PackageFeatures: data.dataValues.PackageFeatures
+    itemId: data.dataValues.itemId,
+    PackageFeatures: data.dataValues.PackageFeatures,
+
   };
   successResponse(res, manipulatedData);
 });

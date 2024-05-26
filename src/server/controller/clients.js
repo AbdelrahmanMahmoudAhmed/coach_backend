@@ -135,6 +135,8 @@ const addClient = controllerWrapper(async (req, res, next) => {
     type: 'client',
   });
 
+ 
+
   // Create a new client associated with the person
   const client = await Client.create({
     personId: person.id,
@@ -142,6 +144,11 @@ const addClient = controllerWrapper(async (req, res, next) => {
     weight,
     goal,
   });
+
+
+  // to remove the password and the person id from the response
+  delete person.dataValues.password
+  delete person.dataValues.id
 
   client.dataValues = { ...person.dataValues, ...client.dataValues }
   successResponse(res, client);
@@ -329,6 +336,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 // get single client client using id
 const getMe = controllerWrapper(async (req, res, next) => {
   const clientId = req.auth.id;
+  console.log('clientId', clientId)
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
   if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 

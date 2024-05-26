@@ -62,12 +62,14 @@ const getProducts = controllerWrapper(async (req, res, next) => {
       [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
     },
   });
+  console.log("data" , data)
   const manipulatedData = data.map((product) => {
     const { id, ...rest } = product.dataValues.Item.dataValues;
     return {
       id: product.dataValues.id,
       ...rest,
       shippingPrice: product.dataValues.shippingPrice,
+      itemId: product.dataValues.itemId,
     };
   });
 
@@ -92,6 +94,8 @@ const getSingleProduct = controllerWrapper(async (req, res, next) => {
     id: data.dataValues.id,
     ...rest,
     shippingPrice: data.dataValues.shippingPrice,
+    itemId: data.dataValues.itemId,
+
   };
   successResponse(res, manipulatedData);
 });
