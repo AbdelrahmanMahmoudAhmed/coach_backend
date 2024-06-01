@@ -102,6 +102,8 @@ const signIn = controllerWrapper(async (req, res, next) => {
       goal,
     });
   
+    // console.log("client" , client)
+
     client.dataValues = { ...person.dataValues, ...client.dataValues }
     successResponse(res, client);
   

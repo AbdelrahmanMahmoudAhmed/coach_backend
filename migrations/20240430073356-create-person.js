@@ -316,6 +316,17 @@ module.exports = {
         type: Sequelize.ENUM('ordered', 'prepared', 'shipped', 'arrived'),
         allowNull: false,
       },
+      clientId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        unique: true,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        references: {
+            model: "clients",
+            key: "id",
+        }
+    },
       itemOrderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -349,27 +360,21 @@ module.exports = {
       },
       dietPlanAr: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       dietPlanEn: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       supplementsAr: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       supplementsEn: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       trainingAr: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       trainingEn: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       itemOrderId: {
         allowNull: false,
@@ -382,6 +387,17 @@ module.exports = {
             key: "id",
         }
     },
+    clientId: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+      unique: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      references: {
+          model: "clients",
+          key: "id",
+      }
+  },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

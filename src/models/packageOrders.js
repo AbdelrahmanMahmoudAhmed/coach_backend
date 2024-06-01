@@ -20,33 +20,34 @@ module.exports = (sequelize, DataTypes) => {
         state: {
             type: DataTypes.ENUM('ordered','pending', 'ready' ,'started' , 'progress' , 'finished'),
             allowNull: false,
+            defaultValue:"ordered"
         },
         dietPlanAr: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         dietPlanEn: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         supplementsAr: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         supplementsEn: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         trainingAr: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         trainingEn: {
             type: DataTypes.STRING,
-            allowNull: false
+            
         },
         itemOrderId: {
-            allowNull: false,
+            allowNull:false,
             type: DataTypes.INTEGER,
             unique: true,
             onDelete: 'CASCADE',

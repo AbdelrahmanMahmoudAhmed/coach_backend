@@ -1,4 +1,4 @@
-const { ContactUs, CartItem, Item, Product, Package } = require("../../models");
+const {  CartItem, Item, Product, Package } = require("../../models");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");

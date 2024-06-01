@@ -17,10 +17,13 @@ const blogs = require("./blogs");
 const manageWebsite = require("./admin/manageWebsite");
 const manageAdmins = require("./admin/admins");
 const manageClients = require("./admin/manageClients");
+const ordersManagement = require("./admin/orders");
+
 const adminAuth = require("./admin/auth");
 const clientAuth = require("./auth/auth");
 const clientManagement = require("./client/manageClient");
 const clientCart = require("./client/cart");
+const clientOrder = require("./client/orders");
 
 
 const setupApiRouters = (app) => {
@@ -46,6 +49,7 @@ const setupApiRouters = (app) => {
 
   /* ------------------------------- CLIENTS'S CART ------------------------------- */
   router.use('/client/cart', clientCart)
+  router.use('/client/orders', clientOrder)
 
 
   /* ------------------------------- ADMIN MANAGEMENT ------------------------------- */
@@ -57,6 +61,8 @@ const setupApiRouters = (app) => {
   router.use("/admin", isAuth(ADMIN), manageAdmins);
   //manage clients
   router.use("/admin/clients-management", isAuth(ADMIN), manageClients);
+    //manage orders
+    router.use("/admin/orders", isAuth(ADMIN), ordersManagement);
   
 
   app.use("/api", router);
