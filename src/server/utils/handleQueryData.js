@@ -1,4 +1,12 @@
+const collectCartData = ( obj ) => {
+  const {id , quantity , createdAt , updatedAt } =obj.dataValues
+  const { type , discountPercentage , price ,titleAr , titleEn , descriptionAr , descriptionEn , image} = obj.Item
 
+  const collectedObj = {id , quantity ,  type , discountPercentage , price ,titleAr , titleEn , descriptionAr , descriptionEn , image , createdAt , updatedAt  }
+  obj.Item.Package && ( collectedObj.period = obj.Item.Package.dataValues.period);
+  obj.Item.Product && ( collectedObj.shippingPrice = obj.Item.Product.dataValues.shippingPrice);
+  return collectedObj
+}
 
 const handleClientOrderData = (obj) => {
     const {
@@ -155,4 +163,4 @@ const handleClientOrderData = (obj) => {
       }
       }
   }
-module.exports = { handleClientOrderData , handleAdminOrderData , handleGetOrderTypesData   }
+module.exports = { handleClientOrderData , handleAdminOrderData , handleGetOrderTypesData , collectCartData   }

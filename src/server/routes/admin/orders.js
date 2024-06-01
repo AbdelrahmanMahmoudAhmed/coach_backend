@@ -25,11 +25,11 @@ router.get('/packages/:orderId', isAuth(ADMIN)  ,  getAllTypeOrder);
 router.post('/:orderId', isAuth(ADMIN)  ,changePaidValidation,  changePaidState);
 
 
-// POST post change productOrder state;
-router.post('/products/:orderId', isAuth(ADMIN)  ,productOrderStateValidation,  changeProductOrderState);
+// patch  change productOrder state;
+router.patch('/products/:orderId', isAuth(ADMIN)  ,productOrderStateValidation,  changeProductOrderState);
 
 // POST post change PackageOrder state;
-router.post('/packages/:orderId', isAuth(ADMIN)  ,packageOrderStateValidation,  changePackageOrderData);
+router.patch('/packages/:orderId', isAuth(ADMIN)  ,packageOrderStateValidation,  changePackageOrderData);
 
 
 

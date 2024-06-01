@@ -5,18 +5,9 @@ const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
 const { Op } = require("sequelize");
+const { collectCartData} = require('../utils/handleQueryData') 
 
 
-// to manpulate the data to send a conveniant data
-const collectData = ( obj ) => {
-  const {id , quantity , createdAt , updatedAt } =obj.dataValues
-  const { type , discountPercentage , price ,titleAr , titleEn , descriptionAr , descriptionEn , image} = obj.Item
-
-  const collectedObj = {id , quantity ,  type , discountPercentage , price ,titleAr , titleEn , descriptionAr , descriptionEn , image , createdAt , updatedAt  }
-  obj.Item.Package && ( collectedObj.period = obj.Item.Package.dataValues.period);
-  obj.Item.Product && ( collectedObj.shippingPrice = obj.Item.Product.dataValues.shippingPrice);
-  return collectedObj
-}
 
 const getCartItems = controllerWrapper(async (req, res, next) => {
   const clientId = req.auth.id;
@@ -59,7 +50,7 @@ const getCartItems = controllerWrapper(async (req, res, next) => {
     offset,
   });
 
-  const handleData = data.map((item)=> collectData(item))
+  const handleData = data.map((item)=> collectCartData(item))
   successResponse(res, handleData, 200, [
     { pagination: { currentPage: page, perPage, totalCount } },
   ]);
@@ -93,7 +84,10 @@ const addToCart = controllerWrapper(async (req, res, next) => {
   });
 
   if (!checkItem) {
-    const addToCart = await CartItem.create({ itemId, quantity, clientId });
+    let quantityChecker = type == "package" ? 1 : quantity
+
+   
+    const addToCart = await CartItem.create({ itemId,quantity :quantityChecker , clientId });
     successResponse(res, addToCart, 201);
   } else {
     // check if the type of the item is package , can not increase it
@@ -162,8 +156,8 @@ const modifyItemQuantity = controllerWrapper(async (req, res, next) => {
     checkItem.quantity = quantity;
     const modifiedCartItem = await checkItem.save();
 
-    collectData(modifiedCartItem)
-    successResponse(res, collectData(modifiedCartItem), 200);
+    collectCartData(modifiedCartItem)
+    successResponse(res, collectCartData(modifiedCartItem), 200);
   }
 });
 
