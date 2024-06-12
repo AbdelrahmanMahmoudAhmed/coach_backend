@@ -11,13 +11,21 @@ const { SUPPER_ADMIN } = require('../../constant/roles')
     try {
         const decodedToken = jwt.decode(token, process.env.SECRET_KEY);        
         if (!decodedToken) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
-        if (decodedToken.type != type) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
+        if ((decodedToken.type != type) && type != 'both') throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         req.auth = decodedToken
         console.log("token >>> " , req.get('Authorization'))
 
         return decodedToken
     } catch (err) {
         throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
+    }
+}
+
+exports.getCurrentUser = function () {
+    return function (req, res, next) {
+         changingToken(req, 'both')
+        console.log("from middleware")
+        next();
     }
 }
 

@@ -20,7 +20,8 @@ const manageClients = require("./admin/manageClients");
 const ordersManagement = require("./admin/orders");
 
 const adminAuth = require("./admin/auth");
-const clientAuth = require("./auth/auth");
+const clientAuth = require("./client/auth");
+const managePasswords = require("./auth/auth");
 const clientManagement = require("./client/manageClient");
 const clientCart = require("./client/cart");
 const clientOrder = require("./client/orders");
@@ -43,8 +44,9 @@ const setupApiRouters = (app) => {
   
 
   /* ------------------------------- WEBSITE AUTH ------------------------------- */
+  router.use("/auth", managePasswords);
   // website auth
-  router.use("/auth", clientAuth);
+  router.use("/client", clientAuth);
   router.use('/me', clientManagement)
 
   /* ------------------------------- CLIENTS'S CART ------------------------------- */
