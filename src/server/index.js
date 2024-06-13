@@ -12,6 +12,11 @@ const app = express();
 const PORT = process.env.PORT
 
 
+/* ------------------------------- Static Files ------------------------------- */
+
+app.use('/u', express.static(path.join(__dirname, ".." ,"..", 'uploads')));
+
+
 /* ------------------------------- Middlewares ------------------------------- */
 
 app.use((req, res, next) => {
