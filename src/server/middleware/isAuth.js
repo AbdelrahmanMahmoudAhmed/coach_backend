@@ -9,7 +9,7 @@ const { SUPPER_ADMIN } = require('../../constant/roles')
  const changingToken =  (req, type) => {
     const token = req.get('Authorization')?.split(" ")[1];
     try {
-        const decodedToken = jwt.decode(token, process.env.SECRET_KEY);        
+        const decodedToken = jwt.decode(token, process.env.SECRET_PASSWORD_KEY);        
         if (!decodedToken) throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         if ((decodedToken.type != type) && type != 'both') throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
         req.auth = decodedToken

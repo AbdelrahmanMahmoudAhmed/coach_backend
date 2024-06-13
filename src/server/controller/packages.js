@@ -5,7 +5,6 @@ const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-const sendEmail = require('../utils/email')
 const path = require('path')
 const clearImage = require('../utils/clearImage')
 
@@ -13,11 +12,7 @@ const clearImage = require('../utils/clearImage')
 
 // get all packages with pagination
 const getPackage = controllerWrapper(async (req, res, next) => {
-  await sendEmail({
-    email:"abdelrahman.mahmoud.ahmed@gmail.com",
-    subject:"from node",
-    message:"Hello bodda"
-  })
+
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
   const page = req.query.page && !isNaN(+req.query.page) ? +req.query.page : 1;

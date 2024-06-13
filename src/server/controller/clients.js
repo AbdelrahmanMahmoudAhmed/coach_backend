@@ -98,6 +98,7 @@ const addClient = controllerWrapper(async (req, res, next) => {
 
   const hashingPass = await hashPassword(password)
   const image = req.file?.filename;
+
   if (!image) {
     throw createAppError("image is required", HttpStatus.BadRequest, 5);
   }

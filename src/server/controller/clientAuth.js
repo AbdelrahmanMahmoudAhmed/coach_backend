@@ -25,7 +25,7 @@ const login = controllerWrapper(async (req, res, next) => {
             where: { email },
         }],
     });
-
+console.log("currentClient" , currentClient)
     if (!currentClient) throw createAppError("this client is not found", HttpStatus.NotFound, 1);
     // compare the password
     const comparedPassword = await comparePassword(currentClient.dataValues.Person.dataValues.password, password);
@@ -57,6 +57,7 @@ const signIn = controllerWrapper(async (req, res, next) => {
   
     const hashingPass = await hashPassword(password)
     const image = req.file?.filename;
+    console.log("image" , image)
     if (!image) {
       throw createAppError("image is required", HttpStatus.BadRequest, 5);
     }

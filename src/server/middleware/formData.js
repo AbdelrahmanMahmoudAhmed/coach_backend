@@ -8,7 +8,7 @@ const gettingPath = (req) => {
   
   if (req.url.includes('/api/admin/website-management/transformations')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "transformation");
-  } else if (req.url.includes('/api/admin/clients-management') ||req.url.includes('/api/auth/sign-in')  ) {
+  } else if (req.url.includes('/api/admin/clients-management') ||req.url.includes('/api/client/sign-in')  ) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "client");
   } else if (req.url.includes('/api/admin/admins')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "admin");
