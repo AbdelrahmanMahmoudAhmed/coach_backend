@@ -15,13 +15,19 @@ const clearImage = require('../utils/clearImage')
 
 const getAllTransformations = controllerWrapper(async (req, res, next) => {
   const data = await Transformation.findAll();
-  successResponse(res, data);
+
+  const dataWithImagePath = data.map((item) => {
+    item.image = `/u/transformation/${item.image}`;
+    return item;
+  });
+
+  successResponse(res, dataWithImagePath);
 });
 
 
 const addTransformation = controllerWrapper(async (req, res, next) => {
+  
   if (!req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);
-
   const { descriptionAr, descriptionEn } = req.body;
   const image = req.file?.filename;
   if (!image) {

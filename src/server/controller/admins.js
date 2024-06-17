@@ -18,7 +18,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
   const page = (req.query.page && !isNaN(+req.query.page)) ? +req.query.page : 1;
-  const perPage = 2;
+  const perPage = 10;
   const offset = (page - 1) * perPage
   const searchTerm = req.query.search || ""
   const totalCount = await Admin.count({
@@ -52,8 +52,9 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
   });
 
   const manipulatedData = data.map((admin) => {
-    const { id, password, ...rest } = admin.dataValues.Person.dataValues
-    return { id: admin.dataValues.id, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
+    let { id, password, image ,  ...rest } = admin.dataValues.Person.dataValues
+    image = `/u/admin/${image}`
+    return { id: admin.dataValues.id, image, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
   })
 
   successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
@@ -71,9 +72,9 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
   if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
-  const { id, password, ...rest } = data.dataValues.Person.dataValues
-
-  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  let { id, password, image , ...rest } = data.dataValues.Person.dataValues
+  image = `/u/admin/${image}`
+  const manipulatedData = { id: data.dataValues.id, image , ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
   successResponse(res, manipulatedData);
 });
@@ -86,9 +87,10 @@ const getMe = controllerWrapper(async (req, res, next) => {
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
   if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
-  const { id, password, ...rest } = data.dataValues.Person.dataValues
+  let { id, password, image, ...rest } = data.dataValues.Person.dataValues
+  image = `/u/admin/${image}`
 
-  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
   successResponse(res, manipulatedData);
 });
@@ -276,6 +278,12 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
   if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+
+  if (image) { // to delete the old image to replace it with the new one
+
+    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", personData.dataValues.image)
+    clearImage(filePath)
+  }
 
 
   /* ------------------------------- START ------------------------------- */

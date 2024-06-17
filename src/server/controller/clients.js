@@ -19,7 +19,7 @@ const getClients = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
   const page = (req.query.page && !isNaN(+req.query.page)) ? +req.query.page : 1;
-  const perPage = 2;
+  const perPage = 10;
   const offset = (page - 1) * perPage
   const searchTerm = req.query.search || ""
   const totalCount = await Client.count({
@@ -53,8 +53,9 @@ const getClients = controllerWrapper(async (req, res, next) => {
   });
 
   const manipulatedData = data.map((client) => {
-    const { id, password, ...rest } = client.dataValues.Person.dataValues
-    return { id: client.dataValues.id, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
+    let { id, password, image, ...rest } = client.dataValues.Person.dataValues
+    image = `/u/client/${image}`
+    return { id: client.dataValues.id, image ,...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
   })
 
   successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
@@ -72,9 +73,9 @@ const getSingleClient = controllerWrapper(async (req, res, next) => {
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
   if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
-  const { id, password, ...rest } = data.dataValues.Person.dataValues
-
-  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  let { id, password, image, ...rest } = data.dataValues.Person.dataValues
+  image = `/u/client/${image}`
+  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   successResponse(res, manipulatedData);
 });
 
@@ -269,7 +270,11 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
   if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
+  if (image) { // to delete the old image to replace it with the new one
 
+    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
+    clearImage(filePath)
+  }
   /* ------------------------------- START ------------------------------- */
   // checking the email and phone in all persons except the requested client
   const checkingArr = []
@@ -341,9 +346,9 @@ const getMe = controllerWrapper(async (req, res, next) => {
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
   if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
-  const { id, password, ...rest } = data.dataValues.Person.dataValues
-
-  const manipulatedData = { id: data.dataValues.id, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  let { id, password,image, ...rest } = data.dataValues.Person.dataValues
+  image = `/u/client/${image}`
+  const manipulatedData = { id: data.dataValues.id,image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   successResponse(res, manipulatedData);
 });
 

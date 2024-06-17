@@ -65,9 +65,11 @@ const getPackage = controllerWrapper(async (req, res, next) => {
 
 
   const manipulatedData = data.map((package) => {
-    const { id, ...rest } = package.dataValues.Item.dataValues;
+    let { id, image, ...rest } = package.dataValues.Item.dataValues;
+    image = `/u/package/${image}`
     return {
       id: package.dataValues.id,
+      image,
       ...rest,
       period: package.dataValues.period,
       itemId: package.dataValues.itemId,
@@ -89,10 +91,11 @@ const getSinglePackage = controllerWrapper(async (req, res, next) => {
   });
   if (!data) throw createAppError("This package is not found", HttpStatus.NotFound, 1);
 
-  const { id, ...rest } = data.dataValues.Item.dataValues;
-
+  let { id, image, ...rest } = data.dataValues.Item.dataValues;
+  image = `/u/package/${image}`
   const manipulatedData = {
     id: data.dataValues.id,
+    image,
     ...rest,
     period: data.dataValues.period,
     itemId: data.dataValues.itemId,

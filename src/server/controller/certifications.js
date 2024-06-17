@@ -12,11 +12,17 @@ const clearImage = require('../utils/clearImage')
 const getCertification = controllerWrapper(async (req, res, next) => {
     const { id } = req.params;
     const data = await Certification.findOne({ where: { id } });
+    if (!data) throw createAppError("This Certifications was not found", HttpStatus.NotFound, 100);
+    data.image &&( data.image = `/u/certification/${data.image}`);
     successResponse(res, data);
 });
 const getAllCertifications = controllerWrapper(async (req, res, next) => {
     const data = await Certification.findAll();
-    successResponse(res, data);
+    const dataWithImagePath = data.map((item) => {
+        item.image &&( item.image = `/u/certification/${item.image}`);
+        return item;
+      });
+    successResponse(res, dataWithImagePath);
 });
 const addCertifications = controllerWrapper(async (req, res, next) => {
 

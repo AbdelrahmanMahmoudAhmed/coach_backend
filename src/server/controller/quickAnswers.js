@@ -36,11 +36,6 @@ const deleteQuickAnswer = controllerWrapper(async (req, res, next) => {
   }
 });
 
-
-
-
-
-
 const updateQuickAnswer = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
   if(! req.auth.allowEdit) throw createAppError("un Authorized", HttpStatus.Unauthorized, 5);

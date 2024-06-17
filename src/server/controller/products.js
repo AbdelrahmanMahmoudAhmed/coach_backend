@@ -20,7 +20,7 @@ const getProducts = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // pagination and search variables
   const page = req.query.page && !isNaN(+req.query.page) ? +req.query.page : 1;
-  const perPage = 2;
+  const perPage = 10;
   const offset = (page - 1) * perPage;
   const searchTerm = req.query.search || "";
   const totalCount = await Product.count({
@@ -64,9 +64,11 @@ const getProducts = controllerWrapper(async (req, res, next) => {
   });
   console.log("data" , data)
   const manipulatedData = data.map((product) => {
-    const { id, ...rest } = product.dataValues.Item.dataValues;
+    let { id, image, ...rest } = product.dataValues.Item.dataValues;
+    image = `/u/product/${image}`
     return {
       id: product.dataValues.id,
+      image,
       ...rest,
       shippingPrice: product.dataValues.shippingPrice,
       itemId: product.dataValues.itemId,
@@ -88,10 +90,12 @@ const getSingleProduct = controllerWrapper(async (req, res, next) => {
   if (!data)
     throw createAppError("This product is not found", HttpStatus.NotFound, 1);
 
-  const { id, ...rest } = data.dataValues.Item.dataValues;
+  let { id,image, ...rest } = data.dataValues.Item.dataValues;
+  image = `/u/product/${image}`
 
   const manipulatedData = {
     id: data.dataValues.id,
+    image,
     ...rest,
     shippingPrice: data.dataValues.shippingPrice,
     itemId: data.dataValues.itemId,

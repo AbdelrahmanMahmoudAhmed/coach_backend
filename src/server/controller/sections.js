@@ -11,7 +11,11 @@ const clearImage = require('../utils/clearImage')
 
 const getAllSections = controllerWrapper(async (req, res, next) => {
     const data = await Section.findAll();
-    successResponse(res, data);
+    const dataWithImagePath = data.map((item) => {
+        item.image &&( item.image = `/u/section/${item.image}`);
+        return item;
+      });
+    successResponse(res, dataWithImagePath);
 });
 const addSections = controllerWrapper(async (req, res, next) => {
 

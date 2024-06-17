@@ -28,7 +28,7 @@ const addAdminValidation =  checkSchema({
             errorMessage: 'the password must be at least 10 characters'
         }
     },
-    type: {
+    role: {
         in: ['body'],
         optional:false,
         trim:true,
@@ -107,7 +107,7 @@ const updateAdminValidation =  checkSchema({
             errorMessage: 'the password must be at least 10 characters'
         }
     },
-    type: {
+    role: {
         in: ['body'],
         optional:true,
         trim:true,
