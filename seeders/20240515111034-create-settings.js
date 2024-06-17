@@ -39,6 +39,12 @@ module.exports = {
         updatedAt: "2024-6-1",
       },
       {
+        key: "about",
+        value: "",
+        createdAt: "2024-6-1",
+        updatedAt: "2024-6-1",
+      },
+      {
         key: "policy",
         value: "",
         createdAt: "2024-6-1",

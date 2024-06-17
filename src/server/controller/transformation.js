@@ -8,11 +8,6 @@ const controllerWrapper = require("../utils/controllerWrapper");
 
 const path = require('path')
 const clearImage = require('../utils/clearImage')
-
-
-
-
-
 const getAllTransformations = controllerWrapper(async (req, res, next) => {
   const data = await Transformation.findAll();
 
