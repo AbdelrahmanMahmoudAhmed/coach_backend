@@ -7,6 +7,7 @@ const { HttpStatus } = require("../utils/httpCodes");
 const { hashPassword, comparePassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
+const { worngEmail ,worngPassword , worngPhone} = require('../../constant/errors')
 
 
 const { getToken } = require('../utils/jwt')
@@ -18,6 +19,9 @@ const { getToken } = require('../utils/jwt')
 // login client
 const login = controllerWrapper(async (req, res, next) => {
     const { email, password } = req.body;
+
+    await  validationChecker(req, res); // validation
+
     // getting the client from database
     const currentClient = await Client.findOne({
         include: [{
@@ -25,12 +29,11 @@ const login = controllerWrapper(async (req, res, next) => {
             where: { email },
         }],
     });
-console.log("currentClient" , currentClient)
-    if (!currentClient) throw createAppError("this client is not found", HttpStatus.NotFound, 1);
+    if (!currentClient) throw createAppError("this client is not found", HttpStatus.NotFound, worngEmail);
     // compare the password
     const comparedPassword = await comparePassword(currentClient.dataValues.Person.dataValues.password, password);
 
-    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, 1);
+    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, worngPassword);
     else{
     // retrieve the convenient data
     const { id, password , ...rest } = currentClient.dataValues.Person.dataValues
@@ -49,8 +52,8 @@ const signIn = controllerWrapper(async (req, res, next) => {
   
     /* ------------------------------- START ------------------------------- */
     // validate the data
-    await validationChecker(req, res);
-    if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 5);
+    await  validationChecker(req, res);
+    if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, worngPassword);
     /* ------------------------------- END ------------------------------- */
   
   
@@ -74,12 +77,11 @@ const signIn = controllerWrapper(async (req, res, next) => {
         ]
       }
     })
-    const checkValidCredentials = []
     searchPerson.forEach((person) => {
-      if (person.email == email) checkValidCredentials.push('this email is invalid')
-      if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
+      if (person.email == email) throw createAppError("this email is not availble", HttpStatus.BadRequest, worngEmail);
+      if (person.phone == phone) throw createAppError('this phone is not availble', HttpStatus.BadRequest, worngPhone);
     })
-    if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
+  
     /* ------------------------------- END ------------------------------- */
   
   

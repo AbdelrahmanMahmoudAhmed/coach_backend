@@ -16,10 +16,10 @@ router.patch('/change-password', changePasswordValidation , getCurrentUser(),  c
 
 
 // patch  (/auth)  => changePassword
-router.patch('/forget-password', emailValidation , getCurrentUser(),  forgetPassword);
+router.patch('/forget-password', emailValidation ,  forgetPassword);
 
 // patch  (/auth)  => resetPassword
-router.patch('/reset-password', resetPasswordValidation , getCurrentUser(),  resetPassword);
+router.patch('/reset-password', resetPasswordValidation ,  resetPassword);
 
 
 

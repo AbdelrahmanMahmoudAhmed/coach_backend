@@ -52,7 +52,7 @@ const imageFilter = function (req, file, cb) {
     cb(null, true);
   } else {
     // Reject the file
-    cb(new Error('Invalid file type. Only JPEG files are allowed.'));
+    cb(new Error('Invalid file type. Only JPEG or jpg files are allowed.'));
   }
 };
 

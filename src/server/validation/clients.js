@@ -25,7 +25,7 @@ const addClientValidation =  checkSchema({
         trim:true,
         isLength: {
             options: { min: 6 },
-            errorMessage: 'the password must be at least 10 characters'
+            errorMessage: 'the password must be at least 6 characters'
         }
     },
     phone: {
