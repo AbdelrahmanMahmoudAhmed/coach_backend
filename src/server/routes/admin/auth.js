@@ -1,5 +1,6 @@
 const {  login } = require('../../controller/adminAuth')
 const express = require('express');
+const { loginValidation } = require('../../validation/auth')
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
 
 
 // GET  (/auth)  => login
-router.post('/auth',  login);
+router.post('/auth', loginValidation,  login);
 
 
 

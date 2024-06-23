@@ -4,6 +4,9 @@ const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
 const {  comparePassword } = require("../utils/password");
 const controllerWrapper = require("../utils/controllerWrapper");
+const validationChecker = require("../validation/checker");
+   
+const { worngEmail ,worngPassword , worngPhone} = require('../../constant/errors')
 
 
 const { getToken } = require('../utils/jwt')
@@ -14,7 +17,10 @@ const { getToken } = require('../utils/jwt')
 
 
 const login = controllerWrapper(async (req, res, next) => {
+    
     const { email, password } = req.body;
+
+    await  validationChecker(req, res); // validation
     // getting the admin from database
     const currentAdmin = await Admin.findOne({
         include: [{
@@ -22,12 +28,12 @@ const login = controllerWrapper(async (req, res, next) => {
             where: { email },
         }],
     });
-
-    if (!currentAdmin) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
+// console.log("currentAdmin" , currentAdmin)
+    if (!currentAdmin) throw createAppError("this admin is not found", HttpStatus.NotFound, worngEmail);
     // compare the password
     const comparedPassword = await comparePassword(currentAdmin.dataValues.Person.dataValues.password, password);
 
-    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, 1);
+    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, worngPassword);
     else{
     // retrieve the convenient data
     const { id, password , ...rest } = currentAdmin.dataValues.Person.dataValues
