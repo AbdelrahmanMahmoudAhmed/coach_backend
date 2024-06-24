@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const { createAppError } = require("../utils/error");
 const { HttpStatus } = require("../utils/httpCodes");
 const { SUPPER_ADMIN } = require('../../constant/roles')
+const { notAuth} = require('../../constant/errors')
 
 
 
@@ -17,7 +18,7 @@ const { SUPPER_ADMIN } = require('../../constant/roles')
 
         return decodedToken
     } catch (err) {
-        throw createAppError("Un authorized! ", HttpStatus.Unauthorized, 1);
+        throw createAppError("Un authorized! ", HttpStatus.Unauthorized, notAuth);
     }
 }
 

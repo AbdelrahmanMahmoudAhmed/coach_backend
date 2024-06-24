@@ -1,4 +1,4 @@
-const { sequelize, Person, Admin } = require("../../models");
+const { Person, Admin } = require("../../models");
 const { Op } = require('sequelize');
 
 const { createAppError } = require("../utils/error");

@@ -6,3 +6,4 @@ exports.worngPhone= 5
 exports.notSubscribed = 6
 exports.expiredToken = 7
 exports.wrongToken = 8
+exports.notAuth = 9
