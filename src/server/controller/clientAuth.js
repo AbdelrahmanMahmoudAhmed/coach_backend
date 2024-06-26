@@ -7,7 +7,7 @@ const { HttpStatus } = require("../utils/httpCodes");
 const { hashPassword, comparePassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-const { worngEmail ,worngPassword , worngPhone} = require('../../constant/errors')
+const { wrongEmail ,wrongPassword , worngPhone} = require('../../constant/errors')
 
 
 const { getToken } = require('../utils/jwt')
@@ -29,11 +29,11 @@ const login = controllerWrapper(async (req, res, next) => {
             where: { email },
         }],
     });
-    if (!currentClient) throw createAppError("this client is not found", HttpStatus.NotFound, worngEmail);
+    if (!currentClient) throw createAppError("this client is not found", HttpStatus.NotFound, wrongEmail);
     // compare the password
     const comparedPassword = await comparePassword(currentClient.dataValues.Person.dataValues.password, password);
 
-    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, worngPassword);
+    if (!comparedPassword) throw createAppError("wrong password", HttpStatus.Unauthorized, wrongPassword);
     else{
     // retrieve the convenient data
     const { id, password , ...rest } = currentClient.dataValues.Person.dataValues
@@ -53,7 +53,7 @@ const signIn = controllerWrapper(async (req, res, next) => {
     /* ------------------------------- START ------------------------------- */
     // validate the data
     await  validationChecker(req, res);
-    if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, worngPassword);
+    if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, wrongPassword);
     /* ------------------------------- END ------------------------------- */
   
   
@@ -78,7 +78,7 @@ const signIn = controllerWrapper(async (req, res, next) => {
       }
     })
     searchPerson.forEach((person) => {
-      if (person.email == email) throw createAppError("this email is not availble", HttpStatus.BadRequest, worngEmail);
+      if (person.email == email) throw createAppError("this email is not availble", HttpStatus.BadRequest, wrongEmail);
       if (person.phone == phone) throw createAppError('this phone is not availble', HttpStatus.BadRequest, worngPhone);
     })
   

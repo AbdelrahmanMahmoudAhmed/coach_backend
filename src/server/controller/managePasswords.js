@@ -7,7 +7,7 @@ const { HttpStatus } = require("../utils/httpCodes");
 const { hashPassword, comparePassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-const { worngEmail ,worngPassword , wrongType , invalidSendMail , notSubscribed , expiredToken , wrongToken} = require('../../constant/errors')
+const { wrongEmail ,wrongPassword , wrongType , invalidSendMail , notSubscribed , expiredToken , wrongToken} = require('../../constant/errors')
 
 const { getForgetToken } = require("../utils/jwt");
 const sendEmail = require('../utils/email')
@@ -33,14 +33,14 @@ const changePassword = controllerWrapper(async (req, res, next) => {
   else throw createAppError("invalid type", HttpStatus.BadRequest, wrongType);
 
   if (!currentUser)
-    throw createAppError("this user is not found", HttpStatus.NotFound, worngEmail);
+    throw createAppError("this user is not found", HttpStatus.NotFound, wrongEmail);
 
   // compare the password
   const comparedPassword = await comparePassword(
     currentUser.dataValues.password   ,
     oldPassword
   );
-  if (!comparedPassword) throw createAppError("wrong password", HttpStatus.BadRequest, worngPassword);
+  if (!comparedPassword) throw createAppError("wrong password", HttpStatus.BadRequest, wrongPassword);
 
   // hashing the new password and add it as a new password on the db
   const hashingPass = await hashPassword(newPassword);

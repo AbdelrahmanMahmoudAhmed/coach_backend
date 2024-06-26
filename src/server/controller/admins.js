@@ -10,6 +10,7 @@ const controllerWrapper = require("../utils/controllerWrapper");
 
 const path = require('path')
 const clearImage = require('../utils/clearImage')
+const { wrongEmail , wrongPassword } = require("../../constant/errors");
 
 
 // get all admins with pagination
@@ -53,7 +54,7 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
 
   const manipulatedData = data.map((admin) => {
     let { id, password, image ,  ...rest } = admin.dataValues.Person.dataValues
-    image = `/u/admin/${image}`
+    image = image ? `/u/admin/${image}` : null
     return { id: admin.dataValues.id, image, ...rest, role: admin.dataValues.role, allowEdit: admin.dataValues.allowEdit, allowDelete: admin.dataValues.allowDelete, websiteManagement: admin.dataValues.websiteManagement }
   })
 
@@ -73,7 +74,7 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
   if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
   let { id, password, image , ...rest } = data.dataValues.Person.dataValues
-  image = `/u/admin/${image}`
+  image = image ? `/u/admin/${image}` : null
   const manipulatedData = { id: data.dataValues.id, image , ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
   successResponse(res, manipulatedData);
@@ -88,7 +89,7 @@ const getMe = controllerWrapper(async (req, res, next) => {
   if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
-  image = `/u/admin/${image}`
+  image = image ? `/u/admin/${image}` : null
 
   const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
@@ -188,7 +189,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
 
 
-  if (image) { // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
 
     const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", personData.dataValues.image)
     clearImage(filePath)
@@ -267,6 +268,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const adminId = req.auth.id;
   const { name, email, password, passwordConfirmation, phone } = req.body;
   const image = req.file?.filename;
+
   /* ------------------------------- START ------------------------------- */
   // validate the data
   await validationChecker(req, res);
@@ -279,7 +281,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
   if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
 
-  if (image) { // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
 
     const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", personData.dataValues.image)
     clearImage(filePath)
@@ -299,13 +301,13 @@ const updateMe = controllerWrapper(async (req, res, next) => {
       ]
     }
   })
-  const checkValidCredentials = []
-  searchPerson.forEach((person) => {
-    if (person.email == email) checkValidCredentials.push('this email is invalid')
-    if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
-  })
-  if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
 
+  searchPerson.forEach((person) => {
+   
+    if (person.email == email)  createAppError('this email is invalid', HttpStatus.BadRequest, 5)
+    if (person.phone == phone) createAppError('this phone is invalid', HttpStatus.BadRequest, 5)
+  })
+  
   /* ------------------------------- END ------------------------------- */
 
 
@@ -356,8 +358,11 @@ const deleteAdmin = controllerWrapper(async (req, res, next) => {
   if (!data) throw createAppError("This Admin was not found", HttpStatus.NotFound, 100);
 
   // to delete the image when the admin item
-  const filePath = path.join(__dirname, "..", "..", "..", "uploads", "admin", data.dataValues.image)
-  clearImage(filePath)
+  if(data.dataValues.image){
+    const filePath =  path.join(__dirname, "..", "..", "..", "uploads", "admin", data.dataValues.image)
+    clearImage(filePath)
+  }
+
 
   // delete admin from the person table and it will be deleted from admin table ( CASCADE )
   await data.destroy();

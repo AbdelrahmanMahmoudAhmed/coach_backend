@@ -1,6 +1,10 @@
+
 const multer = require('multer')
 const multerMW = multer();
 const path = require('path')
+const { createAppError } = require("../utils/error");
+const { HttpStatus } = require("../utils/httpCodes");
+const { invalidImageType } = require("../../constant/errors");
 
 const gettingPath = (req) => {
 
@@ -46,13 +50,14 @@ const imageStorage = multer.diskStorage({
 // Define file filter function based on MIME types
 const imageFilter = function (req, file, cb) {
   // Check MIME type
-  const allowedMimeTypes = ['image/jpeg', 'image/jpg']; // Add more MIME types as needed
+  const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png']; // Add more MIME types as needed
   if (allowedMimeTypes.includes(file.mimetype)) {
     // Accept the file
     cb(null, true);
   } else {
+    
     // Reject the file
-    cb(new Error('Invalid file type. Only JPEG or jpg files are allowed.'));
+    cb( createAppError("the type of the image not allowed", HttpStatus.NotFound, invalidImageType));
   }
 };
 

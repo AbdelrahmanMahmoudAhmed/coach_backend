@@ -1,5 +1,5 @@
-exports.worngEmail = 1;
-exports.worngPassword = 2;
+exports.wrongEmail = 1;
+exports.wrongPassword = 2;
 exports.wrongType =3;
 exports.invalidSendMail = 4
 exports.worngPhone= 5
@@ -7,3 +7,4 @@ exports.notSubscribed = 6
 exports.expiredToken = 7
 exports.wrongToken = 8
 exports.notAuth = 9
+exports.invalidImageType = 10

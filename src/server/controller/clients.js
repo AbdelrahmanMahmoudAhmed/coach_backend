@@ -54,7 +54,7 @@ const getClients = controllerWrapper(async (req, res, next) => {
 
   const manipulatedData = data.map((client) => {
     let { id, password, image, ...rest } = client.dataValues.Person.dataValues
-    image = `/u/client/${image}`
+    image = image ? `/u/client/${image}` : null
     return { id: client.dataValues.id, image ,...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
   })
 
@@ -74,7 +74,7 @@ const getSingleClient = controllerWrapper(async (req, res, next) => {
   if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
-  image = `/u/client/${image}`
+  image = image ? `/u/client/${image}` : null
   const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   successResponse(res, manipulatedData);
 });
@@ -181,7 +181,7 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
 
 
-  if (image) { // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
 
     const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
     clearImage(filePath)
@@ -270,7 +270,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
   if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
-  if (image) { // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
 
     const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
     clearImage(filePath)
@@ -347,7 +347,7 @@ const getMe = controllerWrapper(async (req, res, next) => {
   if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
 
   let { id, password,image, ...rest } = data.dataValues.Person.dataValues
-  image = `/u/client/${image}`
+  image = image ? `/u/client/${image}` : null
   const manipulatedData = { id: data.dataValues.id,image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   successResponse(res, manipulatedData);
 });
@@ -372,8 +372,11 @@ const deleteClient = controllerWrapper(async (req, res, next) => {
 
 
        // to delete the image when the client item
-       const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", data.dataValues.image)
-       clearImage(filePath)
+       if(data.dataValues.image){
+        const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", data.dataValues.image)
+        clearImage(filePath)
+       }
+
   // delete client from the person table and it will be deleted from client table ( CASCADE )
   await data.destroy();
 
