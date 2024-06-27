@@ -6,7 +6,7 @@ const {  comparePassword } = require("../utils/password");
 const controllerWrapper = require("../utils/controllerWrapper");
 const validationChecker = require("../validation/checker");
    
-const { wrongEmail ,wrongPassword , worngPhone} = require('../../constant/errors')
+const { wrongEmail ,wrongPassword , wrongPhone} = require('../../constant/errors')
 
 
 const { getToken } = require('../utils/jwt')

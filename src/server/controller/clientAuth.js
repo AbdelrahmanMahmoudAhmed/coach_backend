@@ -7,7 +7,7 @@ const { HttpStatus } = require("../utils/httpCodes");
 const { hashPassword, comparePassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-const { wrongEmail ,wrongPassword , worngPhone} = require('../../constant/errors')
+const { wrongEmail ,wrongPassword , wrongPhone} = require('../../constant/errors')
 
 
 const { getToken } = require('../utils/jwt')
@@ -79,7 +79,7 @@ const signIn = controllerWrapper(async (req, res, next) => {
     })
     searchPerson.forEach((person) => {
       if (person.email == email) throw createAppError("this email is not availble", HttpStatus.BadRequest, wrongEmail);
-      if (person.phone == phone) throw createAppError('this phone is not availble', HttpStatus.BadRequest, worngPhone);
+      if (person.phone == phone) throw createAppError('this phone is not availble', HttpStatus.BadRequest, wrongPhone);
     })
   
     /* ------------------------------- END ------------------------------- */

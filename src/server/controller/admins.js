@@ -10,7 +10,7 @@ const controllerWrapper = require("../utils/controllerWrapper");
 
 const path = require('path')
 const clearImage = require('../utils/clearImage')
-const { wrongEmail , wrongPassword } = require("../../constant/errors");
+const { wrongEmail , wrongPassword , notAuth, wrongPhone } = require("../../constant/errors");
 
 
 // get all admins with pagination
@@ -71,12 +71,12 @@ const getAdmins = controllerWrapper(async (req, res, next) => {
 const getSingleAdmin = controllerWrapper(async (req, res, next) => {
   const adminId = req.params.id;
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, notAuth);
 
   let { id, password, image , ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/admin/${image}` : null
   const manipulatedData = { id: data.dataValues.id, image , ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
-  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, notAuth);
   successResponse(res, manipulatedData);
 });
 
@@ -86,13 +86,13 @@ const getSingleAdmin = controllerWrapper(async (req, res, next) => {
 const getMe = controllerWrapper(async (req, res, next) => {
   const adminId = req.auth.id;
   const data = await Admin.findOne({ where: { id: adminId }, include: 'Person' });
-  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This Admin is not found", HttpStatus.NotFound, notAuth);
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/admin/${image}` : null
 
   const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
-  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("this admin is not found", HttpStatus.NotFound, notAuth);
   successResponse(res, manipulatedData);
 });
 
@@ -268,6 +268,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const adminId = req.auth.id;
   const { name, email, password, passwordConfirmation, phone } = req.body;
   const image = req.file?.filename;
+  console.log("image>>>>>>>>>>>>>>>>>>>>" , image)
 
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -276,10 +277,10 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
-  if (!adminData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!adminData) throw createAppError("This Admin is not found", HttpStatus.NotFound, notAuth);
 
   const personData = await Person.findOne({ where: { id: adminData.dataValues.personId } });
-  if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, 1);
+  if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, notAuth);
 
   if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
 
@@ -304,8 +305,8 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
   searchPerson.forEach((person) => {
    
-    if (person.email == email)  createAppError('this email is invalid', HttpStatus.BadRequest, 5)
-    if (person.phone == phone) createAppError('this phone is invalid', HttpStatus.BadRequest, 5)
+    if (person.email == email)  createAppError('this email is invalid', HttpStatus.BadRequest, wrongEmail)
+    if (person.phone == phone) createAppError('this phone is invalid', HttpStatus.BadRequest, wrongPhone)
   })
   
   /* ------------------------------- END ------------------------------- */
