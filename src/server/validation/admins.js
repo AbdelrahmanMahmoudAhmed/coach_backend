@@ -48,7 +48,7 @@ const addAdminValidation =  checkSchema({
     },
     allowEdit: {
         in: ['body'],
-        optional:true,
+        optional:false,
         trim:true,
         isBoolean:  true,
             errorMessage: 'allowEdit must be boolean'
@@ -56,7 +56,7 @@ const addAdminValidation =  checkSchema({
     },
     allowDelete: {
         in: ['body'],
-        optional:true,
+        optional:false,
         trim:true,
         isBoolean:  true,
             errorMessage: 'allowDelete must be boolean'
@@ -64,7 +64,7 @@ const addAdminValidation =  checkSchema({
     },
     websiteManagement: {
         in: ['body'],
-        optional:true,
+        optional:false,
         trim:true,
         isBoolean: true,
             errorMessage: 'websiteManagement must be boolean'
@@ -83,8 +83,8 @@ const updateAdminValidation =  checkSchema({
         optional:true,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the name must be at least 6 characters'
+            options: { min: 3 },
+            errorMessage: 'the name must be at least 3 characters'
         }
     },
     email: {

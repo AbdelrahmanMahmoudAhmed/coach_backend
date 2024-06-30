@@ -57,13 +57,14 @@ const imageFilter = function (req, file, cb) {
   } else {
     
     // Reject the file
-    cb( createAppError("the type of the image not allowed", HttpStatus.NotFound, invalidImageType));
+   return cb( createAppError("the type of the image not allowed", HttpStatus.NotFound, invalidImageType));
   }
 };
 
 
 // Multer instances
 const imageUpload = multer({ storage: imageStorage, fileFilter: imageFilter });
+console.log("imageUpload" , imageUpload.any())
 const formDataMiddleware = (req, res, next) => {
   if (gettingPath(req)) {
  

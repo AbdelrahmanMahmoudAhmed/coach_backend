@@ -13,7 +13,7 @@ const router = express.Router();
 // GET  (/admins) 
 router.get('/admins',  getAdmins);
 // // GET  (/admins/me) 
-router.get('/admins/me'  ,getMe);
+router.get('/admins/me' ,getMe);
 // GET  (/admins) 
 router.get('/admins/:id',  getSingleAdmin);
 // POST  (/admins) 
