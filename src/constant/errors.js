@@ -19,3 +19,4 @@ exports.requiredImg = 18
 exports.notMatchedPassword = 19
 exports.notAllowedEmail=20
 exports.notAllowedPhone=21
+exports.validationErr=22
