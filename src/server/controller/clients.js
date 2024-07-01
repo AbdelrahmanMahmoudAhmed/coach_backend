@@ -7,9 +7,29 @@ const { HttpStatus } = require("../utils/httpCodes");
 const { hashPassword } = require("../utils/password");
 const validationChecker = require("../validation/checker");
 const controllerWrapper = require("../utils/controllerWrapper");
-
+const {
+  notAllowedEmail,
+  notAllowedPhone,
+  notFoundPerson,
+  notAuth
+} = require("../../constant/errors");
 const path = require('path')
 const clearImage = require('../utils/clearImage')
+
+const getFilePath = (img) => {
+  const filePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "uploads",
+    "admin",
+    img
+  );
+  return filePath
+}
+
+
 
 
 
@@ -55,23 +75,18 @@ const getClients = controllerWrapper(async (req, res, next) => {
   const manipulatedData = data.map((client) => {
     let { id, password, image, ...rest } = client.dataValues.Person.dataValues
     image = image ? `/u/client/${image}` : null
-    return { id: client.dataValues.id, image ,...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
+    return { id: client.dataValues.id, image, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
   })
 
   successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
 });
 
 
-
-
-
-
-
 // get single client client using id
 const getSingleClient = controllerWrapper(async (req, res, next) => {
   const clientId = req.params.id;
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
-  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/client/${image}` : null
@@ -79,33 +94,23 @@ const getSingleClient = controllerWrapper(async (req, res, next) => {
   successResponse(res, manipulatedData);
 });
 
-
-
-
-
-
-
 // add new client
 const addClient = controllerWrapper(async (req, res, next) => {
   const { name, email, password, passwordConfirmation, phone, goal, tall, weight } = req.body;
-
+  const image = req.file?.filename;
+  if (!image) throw createAppError("image is required", HttpStatus.BadRequest, 0);
   /* ------------------------------- START ------------------------------- */
   // validate the data
   await validationChecker(req, res);
-  if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 5);
+  if (password && (password !== passwordConfirmation)) {
+    if (image) clearImage(getFilePath(image));
+    throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 0);
+  }
   /* ------------------------------- END ------------------------------- */
 
 
 
   const hashingPass = await hashPassword(password)
-  const image = req.file?.filename;
-
-  if (!image) {
-    throw createAppError("image is required", HttpStatus.BadRequest, 5);
-  }
-
-
-
   /* ------------------------------- START ------------------------------- */
   // checking the email and phone in all persons
   const searchPerson = await Person.findAll({
@@ -116,12 +121,25 @@ const addClient = controllerWrapper(async (req, res, next) => {
       ]
     }
   })
-  const checkValidCredentials = []
+
   searchPerson.forEach((person) => {
-    if (person.email == email) checkValidCredentials.push('this email is invalid')
-    if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
-  })
-  if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
+    if (person.email == email) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedEmail
+      );
+    }
+    if (person.phone == phone) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedPhone
+      );
+    }
+  });
   /* ------------------------------- END ------------------------------- */
 
 
@@ -137,7 +155,7 @@ const addClient = controllerWrapper(async (req, res, next) => {
     type: 'client',
   });
 
- 
+
 
   // Create a new client associated with the person
   const client = await Client.create({
@@ -175,17 +193,17 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
-  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!clientData) {
 
-
-
-  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
-
-    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
-    clearImage(filePath)
+    clearImage(getFilePath(image));
+    throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
   }
+  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
+  if (!personData) {
+    clearImage(getFilePath(image));
+    throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
+  }
+
 
 
   /* ------------------------------- START ------------------------------- */
@@ -201,13 +219,27 @@ const updateClient = controllerWrapper(async (req, res, next) => {
       ]
     }
   })
-  const checkValidCredentials = []
-  searchPerson.forEach((person) => {
-    if (person.email == email) checkValidCredentials.push('this email is invalid')
-    if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
-  })
-  if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
 
+  searchPerson.forEach((person) => {
+    if (person.email == email) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedEmail
+      );
+    }
+    if (person.phone == phone) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedPhone
+      );
+    }
+  });
+
+  
   /* ------------------------------- END ------------------------------- */
 
 
@@ -245,7 +277,8 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- END ------------------------------- */
 
-
+  // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) clearImage(getFilePath(personData.dataValues.image));
 
   successResponse(res, updatedData);
 
@@ -266,15 +299,17 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
-  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
-
-  if (image && personData.dataValues.image) { // to delete the old image to replace it with the new one
-
-    const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", personData.dataValues.image)
-    clearImage(filePath)
+  if (!clientData) {
+    clearImage(getFilePath(image));
+    throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
   }
+  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
+  if (!personData) {
+    clearImage(getFilePath(image));
+    throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
+  }
+
+
   /* ------------------------------- START ------------------------------- */
   // checking the email and phone in all persons except the requested client
   const checkingArr = []
@@ -288,12 +323,28 @@ const updateMe = controllerWrapper(async (req, res, next) => {
       ]
     }
   })
-  const checkValidCredentials = []
+
+
   searchPerson.forEach((person) => {
-    if (person.email == email) checkValidCredentials.push('this email is invalid')
-    if (person.phone == phone) checkValidCredentials.push('this phone is invalid')
-  })
-  if (checkValidCredentials.length) throw createAppError(checkValidCredentials, HttpStatus.BadRequest, 5);
+    if (person.email == email) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedEmail
+      );
+    }
+    if (person.phone == phone) {
+      clearImage(getFilePath(image));
+      throw createAppError(
+        "this email is invalid",
+        HttpStatus.BadRequest,
+        notAllowedPhone
+      );
+    }
+  });
+
+
 
   /* ------------------------------- END ------------------------------- */
 
@@ -331,6 +382,8 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- END ------------------------------- */
 
+  // to delete the old image to replace it with the new one
+  if (image && personData.dataValues.image) clearImage(getFilePath(personData.dataValues.image));
 
 
   successResponse(res, updatedData);
@@ -344,11 +397,11 @@ const getMe = controllerWrapper(async (req, res, next) => {
   const clientId = req.auth.id;
   console.log('clientId', clientId)
   const data = await Client.findOne({ where: { id: clientId }, include: 'Person' });
-  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, 1);
+  if (!data) throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
 
-  let { id, password,image, ...rest } = data.dataValues.Person.dataValues
+  let { id, password, image, ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/client/${image}` : null
-  const manipulatedData = { id: data.dataValues.id,image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
   successResponse(res, manipulatedData);
 });
 
@@ -364,21 +417,17 @@ const deleteClient = controllerWrapper(async (req, res, next) => {
 
   const theClient = await Client.findOne({ where: { id: clientId }, include: 'Person' });
 
-  if (!theClient) throw createAppError("This client was not found", HttpStatus.BadRequest, 100);
+  if (!theClient) throw createAppError("This client was not found", HttpStatus.BadRequest, notFoundPerson);
   const { id, password, ...rest } = theClient.dataValues.Person.dataValues
   const data = await Person.findOne({ where: { id } });
 
-  if (!data) throw createAppError("This client was not found", HttpStatus.NotFound, 100);
-
-
-       // to delete the image when the client item
-       if(data.dataValues.image){
-        const filePath = path.join(__dirname, "..", "..", "..", "uploads", "client", data.dataValues.image)
-        clearImage(filePath)
-       }
+  if (!data) throw createAppError("This client was not found", HttpStatus.NotFound, notFoundPerson);
 
   // delete client from the person table and it will be deleted from client table ( CASCADE )
   await data.destroy();
+
+  // to delete the image when the client item
+  if (data.dataValues.image) clearImage(getFilePath(data.dataValues.image));
 
   // retrieve the convenient data
   const manipulatedData = { id: theClient.dataValues.id, ...rest, role: theClient.dataValues.role, allowEdit: theClient.dataValues.allowEdit, allowDelete: theClient.dataValues.allowDelete, websiteManagement: theClient.dataValues.websiteManagement }
