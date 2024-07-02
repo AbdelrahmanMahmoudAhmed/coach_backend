@@ -252,6 +252,8 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
     websiteManagement,
   } = req.body;
   const image = req.file?.filename;
+
+  console.log("image" ,image)
   /* ------------------------------- START ------------------------------- */
   // validate the data
   await validationChecker(req, res);
@@ -330,6 +332,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   updatedData = { ...savedAdminData.dataValues };
   /* ------------------------------- END ------------------------------- */
 
+const oldImage = personData.dataValues.image
   /* ------------------------------- START ------------------------------- */
   // changing data on the person table
   const hashingPass = password ? await hashPassword(password) : null;
@@ -348,8 +351,7 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- END ------------------------------- */
  // to delete the old image to replace it with the new one
-  if (image && personData.dataValues.image) clearImage(getFilePath(personData.dataValues.image));
-
+ if (image && personData.dataValues.image && oldImage) clearImage(getFilePath(oldImage));
   successResponse(res, updatedData);
 });
 
