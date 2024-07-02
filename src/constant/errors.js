@@ -20,3 +20,4 @@ exports.notMatchedPassword = 19
 exports.notAllowedEmail=20
 exports.notAllowedPhone=21
 exports.validationErr=22
+exports.fileTooLarge=23

@@ -278,18 +278,11 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
 
-  if (!adminData){
-    clearImage(getFilePath(image));
-    throw createAppError("This Admin is not found", HttpStatus.NotFound, notFoundPerson);
-  }
+  if (!adminData) throw createAppError("This Admin is not found", HttpStatus.NotFound, notFoundPerson);
   const personData = await Person.findOne({
     where: { id: adminData.dataValues.personId },
   });
-  if (!personData){
-    clearImage(getFilePath(image));
-    throw createAppError("This Admin is not found", HttpStatus.NotFound, notFoundPerson);
-  }
-
+  if (!personData) throw createAppError("This Admin is not found", HttpStatus.NotFound, notFoundPerson);
   /* ------------------------------- START ------------------------------- */
   // checking the email and phone in all persons except the requested admin
   const checkingArr = [];
@@ -305,15 +298,9 @@ const updateAdmin = controllerWrapper(async (req, res, next) => {
   });
 
   searchPerson.forEach((person) => {
-    if (person.email == email){
-      clearImage(getFilePath(image));
-      throw createAppError('this email is invalid', HttpStatus.BadRequest, notAllowedEmail);
-    }
+    if (person.email == email)  throw createAppError('this email is invalid', HttpStatus.BadRequest, notAllowedEmail);
       // checkValidCredentials.push("");
-    if (person.phone == phone){
-      clearImage(getFilePath(image));
-      throw createAppError('this phone is invalid', HttpStatus.BadRequest, notAllowedPhone);
-    }
+    if (person.phone == phone)throw createAppError('this phone is invalid', HttpStatus.BadRequest, notAllowedPhone);
  
   });
 
@@ -375,38 +362,28 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // validate the data
   await validationChecker(req, res);
-  if (password && password !== passwordConfirmation){
-    clearImage(getFilePath(image));
-    throw createAppError(
+  if (password && password !== passwordConfirmation) throw createAppError(
       "password confirmation must be identical the password",
       HttpStatus.BadRequest,
       wrongPassword
     );
-  }
   
   /* ------------------------------- END ------------------------------- */
 
   const adminData = await Admin.findOne({ where: { id: adminId } });
-  if (!adminData) {
-    clearImage(getFilePath(image));
-    throw createAppError(
+  if (!adminData) throw createAppError(
       "This Admin is not found",
       HttpStatus.NotFound,
       notAuth
     );
-  }
-
   const personData = await Person.findOne({
     where: { id: adminData.dataValues.personId },
   });
-  if (!personData) {
-    clearImage(getFilePath(image));
-        throw createAppError(
+  if (!personData) throw createAppError(
       "This Admin is not found",
       HttpStatus.NotFound,
       notAuth
     );
-  }
 // to delete the old image to replace it with the new one
   if (image && personData.dataValues.image) clearImage(getFilePath(personData.dataValues.image));
   
@@ -425,22 +402,16 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   });
 
   searchPerson.forEach((person) => {
-    if (person.email == email) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.email == email)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedEmail
       );
-    }
-    if (person.phone == phone) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.phone == phone)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedPhone
       );
-    }
   });
 
   /* ------------------------------- END ------------------------------- */

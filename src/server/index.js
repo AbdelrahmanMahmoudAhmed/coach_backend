@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const { sequelize } = require('../models');
 const setupApiRouters = require('./routes');
 const errorMiddleware = require('./middleware/errorHandler')
@@ -47,7 +47,7 @@ const corsOptions = {
 //     next();
 // });
 
-app.use(bodyParser.json()); // application/json
+// app.use(bodyParser.json()); // application/json
 app.use(formDataMiddleware); // adding form data according to the request route
 
 

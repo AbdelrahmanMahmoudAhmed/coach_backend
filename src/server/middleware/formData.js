@@ -9,10 +9,10 @@ const { invalidImageType } = require("../../constant/errors");
 const gettingPath = (req) => {
 
   let convenientPath;
-  
+
   if (req.url.includes('/api/admin/website-management/transformations')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "transformation");
-  } else if (req.url.includes('/api/admin/clients-management') ||req.url.includes('/api/client/sign-in')  ) {
+  } else if (req.url.includes('/api/admin/clients-management') || req.url.includes('/api/client/sign-in')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "client");
   } else if (req.url.includes('/api/admin/admins')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "admin");
@@ -22,10 +22,10 @@ const gettingPath = (req) => {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "package");
   } else if (req.url.includes('/api/admin/website-management/sections')) {
     convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "section");
-  }else if(req.url.includes('/api/admin/website-management/certifications')){
-    convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "certification");
-  } else if(req.url.includes('/api/admin/website-management/blogs') ){
-    convenientPath =  path.join(__dirname, "..", "..", "..", "uploads", "blog");
+  } else if (req.url.includes('/api/admin/website-management/certifications')) {
+    convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "certification");
+  } else if (req.url.includes('/api/admin/website-management/blogs')) {
+    convenientPath = path.join(__dirname, "..", "..", "..", "uploads", "blog");
   }
 
 
@@ -55,19 +55,22 @@ const imageFilter = function (req, file, cb) {
     // Accept the file
     cb(null, true);
   } else {
-    
+
     // Reject the file
-   return cb( createAppError("the type of the image not allowed", HttpStatus.NotFound, invalidImageType));
+    return cb(createAppError("the type of the image not allowed", HttpStatus.NotFound, invalidImageType));
   }
 };
 
 
 // Multer instances
-const imageUpload = multer({ storage: imageStorage, fileFilter: imageFilter });
-console.log("imageUpload" , imageUpload.any())
+const imageUpload = multer({
+  storage: imageStorage, fileFilter: imageFilter, limits: {
+    fileSize: 1024 * 1024 * 5 // 5MB file size limit
+  }
+});
 const formDataMiddleware = (req, res, next) => {
   if (gettingPath(req)) {
- 
+
     // Apply single file upload middleware to store products files
     imageUpload.single('image')(req, res, next);
   } else {

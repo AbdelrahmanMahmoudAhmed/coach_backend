@@ -102,10 +102,7 @@ const addClient = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- START ------------------------------- */
   // validate the data
   await validationChecker(req, res);
-  if (password && (password !== passwordConfirmation)) {
-    if (image) clearImage(getFilePath(image));
-    throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 0);
-  }
+  if (password && (password !== passwordConfirmation)) throw createAppError("password confirmation must be identical the password", HttpStatus.BadRequest, 0);
   /* ------------------------------- END ------------------------------- */
 
 
@@ -123,22 +120,16 @@ const addClient = controllerWrapper(async (req, res, next) => {
   })
 
   searchPerson.forEach((person) => {
-    if (person.email == email) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.email == email)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedEmail
       );
-    }
-    if (person.phone == phone) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.phone == phone) throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedPhone
       );
-    }
   });
   /* ------------------------------- END ------------------------------- */
 
@@ -193,16 +184,10 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData) {
+  if (!clientData)  throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
 
-    clearImage(getFilePath(image));
-    throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
-  }
   const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!personData) {
-    clearImage(getFilePath(image));
-    throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
-  }
+  if (!personData) throw createAppError("This client is not found", HttpStatus.NotFound, notFoundPerson);
 
 
 
@@ -221,22 +206,17 @@ const updateClient = controllerWrapper(async (req, res, next) => {
   })
 
   searchPerson.forEach((person) => {
-    if (person.email == email) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.email == email)   throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedEmail
       );
-    }
-    if (person.phone == phone) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+      
+    if (person.phone == phone)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedPhone
       );
-    }
   });
 
   
@@ -299,16 +279,10 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   /* ------------------------------- END ------------------------------- */
 
   const clientData = await Client.findOne({ where: { id: clientId } });
-  if (!clientData) {
-    clearImage(getFilePath(image));
-    throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
-  }
-  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
-  if (!personData) {
-    clearImage(getFilePath(image));
-    throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
-  }
+  if (!clientData) throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
 
+  const personData = await Person.findOne({ where: { id: clientData.dataValues.personId } });
+  if (!personData)  throw createAppError("This client is not found", HttpStatus.NotFound, notAuth);
 
   /* ------------------------------- START ------------------------------- */
   // checking the email and phone in all persons except the requested client
@@ -326,22 +300,16 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
 
   searchPerson.forEach((person) => {
-    if (person.email == email) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.email == email)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedEmail
       );
-    }
-    if (person.phone == phone) {
-      clearImage(getFilePath(image));
-      throw createAppError(
+    if (person.phone == phone)  throw createAppError(
         "this email is invalid",
         HttpStatus.BadRequest,
         notAllowedPhone
       );
-    }
   });
 
 
