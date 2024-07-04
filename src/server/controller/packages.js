@@ -32,13 +32,14 @@ const getPackage = controllerWrapper(async (req, res, next) => {
       },
     },
 
-    where: {
-      [Op.or]: [{ period: { [Op.like]: `%${searchTerm}%` } }],
-    },
+    // where: {
+    //   [Op.or]: [{ period: { [Op.like]: `%${searchTerm}%` } }],
+    // },
   });
   /* ------------------------------- END ------------------------------- */
 
   const data = await Package.findAll({
+    
     include: [
       {
         // Notice `include` takes an ARRAY
@@ -58,9 +59,7 @@ const getPackage = controllerWrapper(async (req, res, next) => {
     ],
     limit: perPage,
     offset,
-    where: {
-      [Op.or]: [{ period: { [Op.like]: `%${searchTerm}%` } }],
-    },
+
   });
 
 

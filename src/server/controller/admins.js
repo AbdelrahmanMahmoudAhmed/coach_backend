@@ -431,7 +431,7 @@ const updateMe = controllerWrapper(async (req, res, next) => {
   const savedPersonData = await personData.save();
   if (savedPersonData) {
     const { id, password, image ,  ...rest } = savedPersonData.dataValues;
-    updatedData = { ...rest , image:`/u/admin/${image}` ,role: adminData.role ,};
+    updatedData = { ...rest , image:`/u/admin/${image}` ,role: adminData.role , ...adminData.dataValues  };
   }
 
   /* ------------------------------- END ------------------------------- */
