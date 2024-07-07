@@ -53,8 +53,6 @@ const getClients = controllerWrapper(async (req, res, next) => {
 
       },
     },
-
-
   });
   /* ------------------------------- END ------------------------------- */
 

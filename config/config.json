@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "rootx",
+    "username": "root",
     "password": "password",
     "database": "coach_db",
     "host": "127.0.0.1",
