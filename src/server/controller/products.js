@@ -35,9 +35,7 @@ const getProducts = controllerWrapper(async (req, res, next) => {
         ],
       },
     },
-    where: {
-      [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
-    },
+
   });
   /* ------------------------------- END ------------------------------- */
 
@@ -58,9 +56,7 @@ const getProducts = controllerWrapper(async (req, res, next) => {
     ],
     limit: perPage,
     offset,
-    where: {
-      [Op.or]: [{ shippingPrice: { [Op.like]: `%${searchTerm}%` } }],
-    },
+
   });
   console.log("data" , data)
   const manipulatedData = data.map((product) => {
