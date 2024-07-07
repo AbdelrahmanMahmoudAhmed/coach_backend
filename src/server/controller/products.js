@@ -30,8 +30,6 @@ const getProducts = controllerWrapper(async (req, res, next) => {
         [Op.or]: [
           { titleAr: { [Op.like]: `%${searchTerm}%` } },
           { titleEn: { [Op.like]: `%${searchTerm}%` } },
-          { descriptionAr: { [Op.like]: `%${searchTerm}%` } },
-          { descriptionEn: { [Op.like]: `%${searchTerm}%` } },
         ],
       },
     },
@@ -48,8 +46,6 @@ const getProducts = controllerWrapper(async (req, res, next) => {
           [Op.or]: [
             { titleAr: { [Op.like]: `%${searchTerm}%` } },
             { titleEn: { [Op.like]: `%${searchTerm}%` } },
-            { descriptionAr: { [Op.like]: `%${searchTerm}%` } },
-            { descriptionEn: { [Op.like]: `%${searchTerm}%` } },
           ],
         },
       },
