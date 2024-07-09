@@ -8,15 +8,25 @@ const controllerWrapper = require("../utils/controllerWrapper");
 
 const path = require('path')
 const clearImage = require('../utils/clearImage')
+
+
 const getAllTransformations = controllerWrapper(async (req, res, next) => {
-  const data = await Transformation.findAll();
+    /* ------------------------------- START ------------------------------- */
+  // pagination and search variables
+  const page = (req.query.page && !isNaN(+req.query.page)) ? +req.query.page : 1;
+  const perPage = 10;
+  const offset = (page - 1) * perPage
+  const totalCount = await Transformation.count();
+  /* ------------------------------- END ------------------------------- */
+  const data = await Transformation.findAll({limit: perPage, offset});
+
 
   const dataWithImagePath = data.map((item) => {
     item.image = `/u/transformation/${item.image}`;
     return item;
   });
 
-  successResponse(res, dataWithImagePath);
+  successResponse(res, dataWithImagePath ,200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
 });
 
 
