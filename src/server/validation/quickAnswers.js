@@ -8,8 +8,8 @@ const addQuickAnswerValidation =  checkSchema({
         optional:false,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the question must be at least 6 characters'
+            options: { min: 7 },
+            errorMessage: 'the question must be at least 7 characters'
         }
     },
     questionEn: {
@@ -17,8 +17,8 @@ const addQuickAnswerValidation =  checkSchema({
         optional:false,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the question must be at least 6 characters'
+            options: { min: 7 },
+            errorMessage: 'the question must be at least 7 characters'
         }
     },
     answerAr: {
@@ -26,8 +26,8 @@ const addQuickAnswerValidation =  checkSchema({
         optional:false,
         trim:true,
         isLength: {
-            options: { min: 10 },
-            errorMessage: 'the answer must be at least 10 characters'
+            options: { min: 7 },
+            errorMessage: 'the answer must be at least 7 characters'
         }
     },
     answerEn: {
@@ -35,8 +35,8 @@ const addQuickAnswerValidation =  checkSchema({
         optional:false,
         trim:true,
         isLength: {
-            options: { min: 10 },
-            errorMessage: 'the answer must be at least 10 characters'
+            options: { min: 7 },
+            errorMessage: 'the answer must be at least 7 characters'
         }
     }
 });
@@ -56,8 +56,8 @@ const updateQuickAnswerValidation =  checkSchema({
         optional: true,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the question must be at least 6 characters'
+            options: { min: 7 },
+            errorMessage: 'the question must be at least 7 characters'
         }
     },
     questionEn: {
@@ -65,8 +65,8 @@ const updateQuickAnswerValidation =  checkSchema({
         optional: true,
         trim:true,
         isLength: {
-            options: { min: 6 },
-            errorMessage: 'the question must be at least 6 characters'
+            options: { min: 7 },
+            errorMessage: 'the question must be at least 7 characters'
         }
     },
     answerAr: {
@@ -74,8 +74,8 @@ const updateQuickAnswerValidation =  checkSchema({
         optional: true,
         trim:true,
         isLength: {
-            options: { min: 10 },
-            errorMessage: 'the answer must be at least 10 characters'
+            options: { min: 7 },
+            errorMessage: 'the answer must be at least 7 characters'
         }
     },
     answerEn: {
@@ -83,8 +83,8 @@ const updateQuickAnswerValidation =  checkSchema({
         optional: true,
         trim:true,
         isLength: {
-            options: { min: 10 },
-            errorMessage: 'the answer must be at least 10 characters'
+            options: { min: 7 },
+            errorMessage: 'the answer must be at least 7 characters'
         }
     }
 });

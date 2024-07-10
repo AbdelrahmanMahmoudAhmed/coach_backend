@@ -58,6 +58,12 @@ const handelGettingData = async (req, res, next) => {
                         if (item.key == 'footerDescEn') layoutData.footerDescEn = item.value
                         if (item.key == 'phone') layoutData.phone = item.value
                         if (item.key == 'email') layoutData.email = item.value
+                        if (item.key == 'facebook') layoutData.facebook = item.value
+                        if (item.key == 'tiktok') layoutData.tiktok = item.value
+                        if (item.key == 'instagram') layoutData.instagram = item.value
+                        if (item.key == 'x') layoutData.x = item.value
+                        if (item.key == 'youtube') layoutData.youtube = item.value
+                        if (item.key == 'whatsApp') layoutData.whatsApp = item.value
                     })
                     successResponse(res, layoutData);
             default:
@@ -74,7 +80,7 @@ const handelGettingData = async (req, res, next) => {
     }
 
     data.forEach((item, idx) => {
-        let socialMedia = ['facebook', 'tiktok', 'instagram', 'x', 'youtube'];
+        let socialMedia = ['facebook', 'tiktok', 'instagram', 'x', 'youtube' , 'whatsApp'];
         let seo = ['title', 'description', 'keywords'];
         let pages = ['aboutAr', 'aboutEn', 'policyAr', 'policyEn', 'termsAr', 'termsEn' , "contactContentAr" , 'contactContentEn'];
         let desc = ['mainTitleAr', "mainTitleEn", 'mainDescAr', "mainDescEn", "footerDescAr", "footerDescEn", "phone" , "email"]
