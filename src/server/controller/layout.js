@@ -32,38 +32,61 @@ const handelGettingData = async (req, res, next) => {
                     if (item.key == 'aboutEn') aboutData.aboutEn = item.value
                 })
                 successResponse(res, aboutData);
-            case "seo":
-                let seoData = {}
+                case "contact":
+                    let contactData = {}
+                    data.forEach((item) => {
+                        if (item.key == 'contactContentAr') contactData.contactContentAr = item.value
+                        if (item.key == 'contactContentEn') contactData.contactContentEn = item.value
+                    })
+                    successResponse(res, contactData);
+            case "home":
+                let homeData = {}
                 data.forEach((item) => {
-                    if (item.key == 'title') seoData.title = item.value
-                    if (item.key == 'description') seoData.description = item.value
-                    if (item.key == 'keyWords') seoData.keyWords = item.value
+                    if (item.key == 'mainTitleAr') homeData.mainTitleAr = item.value
+                    if (item.key == 'mainTitleEn') homeData.mainTitleEn = item.value
+                    if (item.key == 'mainDescAr') homeData.mainDescAr = item.value
+                    if (item.key == 'mainDescEn') homeData.mainDescEn = item.value
                 })
-                successResponse(res, seoData);
+                successResponse(res, homeData);
+                case "layout":
+                    let layoutData = {}
+                    data.forEach((item) => {
+                        if (item.key == 'title') layoutData.title = item.value
+                        if (item.key == 'description') layoutData.description = item.value
+                        if (item.key == 'keywords') layoutData.keywords = item.value
+                        if (item.key == 'footerDescAr') layoutData.footerDescAr = item.value
+                        if (item.key == 'footerDescEn') layoutData.footerDescEn = item.value
+                        if (item.key == 'phone') layoutData.phone = item.value
+                        if (item.key == 'email') layoutData.email = item.value
+                    })
+                    successResponse(res, layoutData);
             default:
 
         }
     }
 
     const layoutData = {
-        data: {},
+        // data: {},
         seo: {},
         socialMedia: {},
-        // pages: {},
+        pages: {},
+        desc:{}
     }
 
     data.forEach((item, idx) => {
         let socialMedia = ['facebook', 'tiktok', 'instagram', 'x', 'youtube'];
-        let seo = ['title', 'description', 'keyWords'];
-        let pages = ['aboutAr', 'aboutEn', 'policyAr', 'policyEn', 'termsAr', 'termsEn'];
-        let desc = ['mainDescAr', "mainDescEn", "footerDescAr", "footerDescEn"]
+        let seo = ['title', 'description', 'keywords'];
+        let pages = ['aboutAr', 'aboutEn', 'policyAr', 'policyEn', 'termsAr', 'termsEn' , "contactContentAr" , 'contactContentEn'];
+        let desc = ['mainTitleAr', "mainTitleEn", 'mainDescAr', "mainDescEn", "footerDescAr", "footerDescEn", "phone" , "email"]
         if (socialMedia.includes(item.key)) {
             layoutData.socialMedia[item.key] = item.value
         } else if (seo.includes(item.key)) {
             layoutData.seo[item.key] = item.value
 
         } else if (desc.includes(item.key)) {
-            layoutData.data[item.key] = item.value
+            layoutData.desc[item.key] = item.value
+        } else if (pages.includes(item.key)) {
+            layoutData.pages[item.key] = item.value
         }
     }
 
