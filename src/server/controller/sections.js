@@ -15,16 +15,17 @@ const getAllSections = controllerWrapper(async (req, res, next) => {
         item.image &&( item.image = `/u/section/${item.image}`);
         return item;
       });
+      
     successResponse(res, dataWithImagePath);
 });
 const addSections = controllerWrapper(async (req, res, next) => {
 
 
 
-    const { nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction } = req.body;
+    const { nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction , callToActionLink } = req.body;
     const image = req.file?.filename;
 
-    const requestedSection = { image, nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction }
+    const requestedSection = { image, nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction , callToActionLink }
 
     await validationChecker(req, res);
 
@@ -47,7 +48,7 @@ const deleteSections = controllerWrapper(async (req, res, next) => {
 });
 const updateSections = controllerWrapper(async (req, res, next) => {
     const { id } = req.params;
-    const { nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction } = req.body;
+    const { nameAr, nameEn, titleAr, titleEn, contentAr, contentEn, link, callToAction , callToActionLink } = req.body;
     const image = req.file?.filename;
     await validationChecker(req, res);
 
@@ -59,8 +60,8 @@ const updateSections = controllerWrapper(async (req, res, next) => {
 
     if(image){ // to delete the old image to replace it with the new one
 
-        const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "section", data.dataValues.image)
-         clearImage(filePath)
+        const filePath = path.join(__dirname ,".." , ".." ,"..","uploads" , "section", (data.dataValues.image || '')) || ''
+        filePath && clearImage(filePath)
     }
 
 
@@ -73,6 +74,8 @@ const updateSections = controllerWrapper(async (req, res, next) => {
     contentEn && (data.contentEn = contentEn);
     link && (data.link = link);
     callToAction && (data.callToAction = callToAction);
+    data.callToActionLink = callToActionLink;
+     
 
     const savedData = await data.save();
 

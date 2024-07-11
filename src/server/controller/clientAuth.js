@@ -37,7 +37,7 @@ const login = controllerWrapper(async (req, res, next) => {
     else{
     // retrieve the convenient data
     const { id, password , ...rest } = currentClient.dataValues.Person.dataValues
-    const convenientData = { id: currentClient.dataValues.id, ...rest, tall: currentClient.dataValues.tall, allowEdit: currentClient.dataValues.allowEdit, weight: currentClient.dataValues.weight, goal: currentClient.dataValues.goal }
+    const convenientData = { id: currentClient.dataValues.id, ...rest, tall: currentClient.dataValues.tall, allowEdit: currentClient.dataValues.allowEdit, weight: currentClient.dataValues.weight, goal: currentClient.dataValues.goal  ,country:currentClient.dataValues.country , favouriteMeals:currentClient.dataValues.favouriteMeals,unFavouriteMeals:currentClient.dataValues.unFavouriteMeals,hasDisease:currentClient.dataValues.hasDisease ,diseaseType:currentClient.dataValues.diseaseType  }
     const token = getToken(convenientData);
     successResponse(res,  convenientData , 200 ,[{ token:token}]);
     }
@@ -48,7 +48,7 @@ const login = controllerWrapper(async (req, res, next) => {
 
 // signIn client
 const signIn = controllerWrapper(async (req, res, next) => {
-    const { name, email, password, passwordConfirmation, phone, goal , tall , weight } = req.body;
+    const { name, email, password, passwordConfirmation, phone, goal , tall , weight , country , unFavouriteMeals , favouriteMeals , hasDisease , diseaseType} = req.body;
   
     /* ------------------------------- START ------------------------------- */
     // validate the data
@@ -103,6 +103,8 @@ const signIn = controllerWrapper(async (req, res, next) => {
       tall,
       weight,
       goal,
+       country , unFavouriteMeals , favouriteMeals , hasDisease ,
+     diseaseType :  hasDisease ? diseaseType : ''
     });
   
     // console.log("client" , client)

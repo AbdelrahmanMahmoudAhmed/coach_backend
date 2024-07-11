@@ -73,7 +73,7 @@ const getClients = controllerWrapper(async (req, res, next) => {
   const manipulatedData = data.map((client) => {
     let { id, password, image, ...rest } = client.dataValues.Person.dataValues
     image = image ? `/u/client/${image}` : null
-    return { id: client.dataValues.id, image, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal }
+    return { id: client.dataValues.id, image, ...rest, role: client.dataValues.role, tall: client.dataValues.tall, weight: client.dataValues.weight, goal: client.dataValues.goal ,country: client.dataValues.country , favouriteMeals: client.dataValues.favouriteMeals,unFavouriteMeals: client.dataValues.unFavouriteMeals,hasDisease: client.dataValues.hasDisease ,diseaseType: client.dataValues.diseaseType }
   })
 
   successResponse(res, manipulatedData, 200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
@@ -88,13 +88,13 @@ const getSingleClient = controllerWrapper(async (req, res, next) => {
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/client/${image}` : null
-  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  const manipulatedData = { id: data.dataValues.id, image, ...rest,role: data.dataValues.role, tall: data.dataValues.tall, weight: data.dataValues.weight, goal: data.dataValues.goal ,country: data.dataValues.country , favouriteMeals: data.dataValues.favouriteMeals,unFavouriteMeals: data.dataValues.unFavouriteMeals,hasDisease: data.dataValues.hasDisease ,diseaseType: data.dataValues.diseaseType }
   successResponse(res, manipulatedData);
 });
 
 // add new client
 const addClient = controllerWrapper(async (req, res, next) => {
-  const { name, email, password, passwordConfirmation, phone, goal, tall, weight } = req.body;
+  const { name, email, password, passwordConfirmation, phone, goal, tall, weight , country , unFavouriteMeals , favouriteMeals , hasDisease , diseaseType} = req.body;
   const image = req.file?.filename;
   if (!image) throw createAppError("image is required", HttpStatus.BadRequest, 0);
   /* ------------------------------- START ------------------------------- */
@@ -151,8 +151,11 @@ const addClient = controllerWrapper(async (req, res, next) => {
     personId: person.id,
     tall,
     weight,
-    goal,
+    goal, country , unFavouriteMeals , favouriteMeals , hasDisease ,
+     diseaseType :  hasDisease ? diseaseType : ''
   });
+
+
 
 
   // to remove the password and the person id from the response
@@ -170,7 +173,7 @@ const addClient = controllerWrapper(async (req, res, next) => {
 // update client
 const updateClient = controllerWrapper(async (req, res, next) => {
   const clientId = req.params.id;
-  const { name, email, password, passwordConfirmation, phone, goal, tall, weight } = req.body;
+  const { name, email, password, passwordConfirmation, phone, goal, tall, weight , country , unFavouriteMeals , favouriteMeals , hasDisease , diseaseType } = req.body;
   const image = req.file?.filename;
 
 
@@ -225,14 +228,27 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 
   let updatedData = {} // to collect updated data on the two tables ( Person + client )
 
+  console.log("hasDisease" , hasDisease)
 
   /* ------------------------------- START ------------------------------- */
   // changing data on the Client table
   tall && (clientData.tall = tall);
   weight && (clientData.weight = weight);
   goal && (clientData.goal = goal);
+  (typeof hasDisease != 'undefined')  && (clientData.hasDisease = hasDisease);
+  country && (clientData.country = country);
+  unFavouriteMeals && (clientData.unFavouriteMeals = unFavouriteMeals);
+  favouriteMeals && (clientData.favouriteMeals = favouriteMeals);
+  // diseaseType && (clientData.diseaseType = diseaseType);
+  if(!clientData.hasDisease) clientData.diseaseType = null;
+  else if(diseaseType) clientData.diseaseType = diseaseType
+
+
   const savedclientData = await clientData.save();
   updatedData = { ...savedclientData.dataValues }
+
+console.log("hasDisease" , hasDisease)
+
   /* ------------------------------- END ------------------------------- */
 
 
@@ -268,7 +284,7 @@ const updateClient = controllerWrapper(async (req, res, next) => {
 const updateMe = controllerWrapper(async (req, res, next) => {
 
   const clientId = req.auth.id;
-  const { name, email, password, passwordConfirmation, phone, tall, weight, goal } = req.body;
+  const { name, email, password, passwordConfirmation, phone, goal, tall, weight , country , unFavouriteMeals , favouriteMeals , hasDisease , diseaseType } = req.body;
   const image = req.file?.filename;
   /* ------------------------------- START ------------------------------- */
   // validate the data
@@ -323,9 +339,23 @@ const updateMe = controllerWrapper(async (req, res, next) => {
 
   /* ------------------------------- START ------------------------------- */
   // changing data on the Client table
+;
+
   tall && (clientData.tall = tall);
   weight && (clientData.weight = weight);
   goal && (clientData.goal = goal);
+  (typeof hasDisease != 'undefined')  && (clientData.hasDisease = hasDisease);
+  country && (clientData.country = country);
+  unFavouriteMeals && (clientData.unFavouriteMeals = unFavouriteMeals);
+  favouriteMeals && (clientData.favouriteMeals = favouriteMeals);
+  // diseaseType && (clientData.diseaseType = diseaseType);
+
+
+  if(!clientData.hasDisease) clientData.diseaseType = null;
+  else if(diseaseType) clientData.diseaseType = diseaseType
+
+
+
   const savedclientData = await clientData.save();
   updatedData = { ...savedclientData.dataValues }
   /* ------------------------------- END ------------------------------- */
@@ -367,7 +397,7 @@ const getMe = controllerWrapper(async (req, res, next) => {
 
   let { id, password, image, ...rest } = data.dataValues.Person.dataValues
   image = image ? `/u/client/${image}` : null
-  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement }
+  const manipulatedData = { id: data.dataValues.id, image, ...rest, role: data.dataValues.role, allowEdit: data.dataValues.allowEdit, allowDelete: data.dataValues.allowDelete, websiteManagement: data.dataValues.websiteManagement  ,country: data.dataValues.country , favouriteMeals: data.dataValues.favouriteMeals,unFavouriteMeals: data.dataValues.unFavouriteMeals,hasDisease: data.dataValues.hasDisease ,diseaseType: data.dataValues.diseaseType }
   successResponse(res, manipulatedData);
 });
 

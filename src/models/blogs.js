@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         type: {
-            type: DataTypes.ENUM('video', 'pic'),
+            type: DataTypes.ENUM('video', 'pic','text'),
             allowNull: false,
           },
     }, {

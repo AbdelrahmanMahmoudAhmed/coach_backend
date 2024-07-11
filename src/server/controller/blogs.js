@@ -29,21 +29,23 @@ const getAllBlogs = controllerWrapper(async (req, res, next) => {
 
 const addBlog = controllerWrapper(async (req, res, next) => {
   const { titleAr, titleEn, contentAr, contentEn, type, link } = req.body;
-  const image = type == "pic" ? req.file?.filename : null;
+  const image =  type == "pic" ? req.file?.filename : null;
+
+
   const requestedCertification = {
     titleAr,
     titleEn,
     contentAr,
     contentEn,
     type,
-    link,
+    link :  type == "video" ? link : null,
   };
   type == "pic" && image
     ? (requestedCertification.image = image)
     : (requestedCertification.image = null);
 
   // to delete the image witch was add from the form data middleware if the type was video
-  if (req.file?.filename && type == "video") {
+  if (req.file?.filename && type != "image") {
     const filePath = path.join(
       __dirname,
       "..",
@@ -116,7 +118,7 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
   }
 
   // to delete the image witch was add from the form data middleware if the type was video
-  if (req.file?.filename && type == "video") {
+  if (req.file?.filename && type != "pic") {
     const filePath = path.join(
       __dirname,
       "..",

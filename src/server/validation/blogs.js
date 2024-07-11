@@ -44,7 +44,7 @@ const addBlogValidation = checkSchema({
         optional: true,
         trim: true,
         isIn: {
-            options: [['pic', 'video']],
+            options: [['pic', 'video' , 'text']],
             errorMessage: 'must be pic or video'
         },
     },
@@ -102,7 +102,7 @@ const updateBlogValidation = checkSchema({
         optional: true,
         trim: true,
         isIn: {
-            options: [['pic', 'video']],
+            options: [['pic', 'video' , 'text']],
             errorMessage: 'must be pic or video'
         },
     },

@@ -76,6 +76,14 @@ const sectionValidation =  checkSchema({
         isBoolean:true,
         errorMessage: 'the name must be at least 3 characters'
     },
+
+    callToActionLink : {
+        in: ['body'],
+        optional:true,
+        trim:true,
+        isURL:true,
+        errorMessage: 'must be a valid url'
+    },
     
 });
 
