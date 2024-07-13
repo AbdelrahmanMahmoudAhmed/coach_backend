@@ -219,7 +219,6 @@ const updateClientValidation =  checkSchema({
         },
         errorMessage: 'add a valid weight'
     },
-
     country: {
         in: ['body'],
         optional:true,
