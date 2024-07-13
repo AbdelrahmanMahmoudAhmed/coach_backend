@@ -1,4 +1,5 @@
 const { Blog } = require("../../models");
+const { Op } = require("sequelize");
 const { createAppError } = require("../utils/error");
 const { successResponse } = require("../utils/response");
 const { HttpStatus } = require("../utils/httpCodes");
@@ -17,14 +18,42 @@ const getSingleBlog = controllerWrapper(async (req, res, next) => {
   successResponse(res, data);
 });
 const getAllBlogs = controllerWrapper(async (req, res, next) => {
-  const data = await Blog.findAll();
+    /* ------------------------------- START ------------------------------- */
+  // pagination and search variables
+  const page = req.query.page && !isNaN(+req.query.page) ? +req.query.page : 1;
+  const perPage = 10;
+  const offset = (page - 1) * perPage;
+  const searchTerm = req.query.search || "";
+  const totalCount = await Blog.count({
+    where: {
+      [Op.or]: [
+        { titleAr: { [Op.like]: `%${searchTerm}%` } },
+        { titleEn: { [Op.like]: `%${searchTerm}%` } },
+      ],
+    },
+  });
+  /* ------------------------------- END ------------------------------- */
+  const data = await Blog.findAll({
+    where: {
+      [Op.or]: [
+        { titleAr: { [Op.like]: `%${searchTerm}%` } },
+        { titleEn: { [Op.like]: `%${searchTerm}%` } },
+      ],
+    },
+    
+    limit: perPage,
+    offset,
+  });
 
   const dataWithImagePath = data.map((item) => {
     item.image = `/u/blog/${item.image}`;
     return item;
   });
 
-  successResponse(res, dataWithImagePath);
+
+  successResponse(res, dataWithImagePath, 200, [
+    { pagination: { currentPage: page, perPage, totalCount } },
+  ]);
 });
 
 const addBlog = controllerWrapper(async (req, res, next) => {
