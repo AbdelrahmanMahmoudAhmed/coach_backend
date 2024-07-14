@@ -46,7 +46,7 @@ const getAllBlogs = controllerWrapper(async (req, res, next) => {
   });
 
   const dataWithImagePath = data.map((item) => {
-    item.image = `/u/blog/${item.image}`;
+    item.image  && (item.image = `/u/blog/${item.image}`);
     return item;
   });
 
@@ -84,6 +84,7 @@ const addBlog = controllerWrapper(async (req, res, next) => {
       "blog",
       req.file?.filename
     );
+    console.log(" req.file?.filename" ,  req.file?.filename)
 
     clearImage(filePath);
   }
@@ -91,6 +92,8 @@ const addBlog = controllerWrapper(async (req, res, next) => {
   const certificationReq = await Blog.create(requestedCertification);
   successResponse(res, certificationReq, 201);
 });
+
+
 
 const deleteBlog = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
@@ -120,7 +123,7 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
 
   const { titleAr, titleEn, contentAr, contentEn, type, link } = req.body;
-  const image = type == "pic" ? req.file?.filename : null;
+  let image = type == "pic" ? req.file?.filename : null;
   await validationChecker(req, res);
 
   const data = await Blog.findOne({ where: { id } });
@@ -131,7 +134,7 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
   // to delete the image if there is a new one
   if (
     (req.file?.filename && data.dataValues.image) ||
-    (type == "video" && data.dataValues.image)
+    (type != "pic" && data.dataValues.image)
   ) {
     // to delete the old image to replace it with the new one
     const filePath = path.join(
@@ -144,7 +147,10 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
       data.dataValues.image
     );
     clearImage(filePath);
+    image = null
   }
+
+  if( type != 'video')  data.link = null;
 
   // to delete the image witch was add from the form data middleware if the type was video
   if (req.file?.filename && type != "pic") {
@@ -159,6 +165,7 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
     );
     clearImage(filePath);
   }
+  console.log('data.image' , data.image)
   data.image = image;
   titleAr && (data.titleAr = titleAr);
   titleEn && (data.titleEn = titleEn);
