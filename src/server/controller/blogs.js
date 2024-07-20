@@ -74,7 +74,7 @@ const addBlog = controllerWrapper(async (req, res, next) => {
     : (requestedCertification.image = null);
 
   // to delete the image witch was add from the form data middleware if the type was video
-  if (req.file?.filename && type != "image") {
+  if (req.file?.filename && type != "pic") {
     const filePath = path.join(
       __dirname,
       "..",
@@ -84,7 +84,6 @@ const addBlog = controllerWrapper(async (req, res, next) => {
       "blog",
       req.file?.filename
     );
-    console.log(" req.file?.filename" ,  req.file?.filename)
 
     clearImage(filePath);
   }
@@ -147,7 +146,12 @@ const updateBlog = controllerWrapper(async (req, res, next) => {
       data.dataValues.image
     );
     clearImage(filePath);
+  }
+
+  if( type != 'pic'){
     image = null
+  }else if (image && type == 'pic'){
+    data.image = image
   }
 
   if( type != 'video')  data.link = null;
