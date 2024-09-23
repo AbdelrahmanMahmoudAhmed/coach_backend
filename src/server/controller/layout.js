@@ -46,6 +46,8 @@ const handelGettingData = async (req, res, next) => {
                     if (item.key == 'mainTitleEn') homeData.mainTitleEn = item.value
                     if (item.key == 'mainDescAr') homeData.mainDescAr = item.value
                     if (item.key == 'mainDescEn') homeData.mainDescEn = item.value
+                    if (item.key == 'aboutAr') homeData.aboutAr = item.value
+                    if (item.key == 'aboutEn') homeData.aboutEn = item.value
                 })
                 successResponse(res, homeData);
                 case "layout":
