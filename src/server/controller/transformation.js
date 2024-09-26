@@ -10,6 +10,8 @@ const path = require('path')
 const clearImage = require('../utils/clearImage')
 
 
+
+
 const getAllTransformations = controllerWrapper(async (req, res, next) => {
     /* ------------------------------- START ------------------------------- */
   // pagination and search variables
@@ -18,7 +20,11 @@ const getAllTransformations = controllerWrapper(async (req, res, next) => {
   const offset = (page - 1) * perPage
   const totalCount = await Transformation.count();
   /* ------------------------------- END ------------------------------- */
-  const data = await Transformation.findAll({limit: perPage, offset});
+  const hasPagenation = req.query.notPagenated == '1' ? {} : {limit: perPage, offset}
+  const data = await Transformation.findAll(hasPagenation);
+
+  console.log("hasPagenation" , hasPagenation)
+  console.log("req.query.notPagenated " ,req.query.notPagenated )
 
 
   const dataWithImagePath = data.map((item) => {
@@ -26,7 +32,7 @@ const getAllTransformations = controllerWrapper(async (req, res, next) => {
     return item;
   });
 
-  successResponse(res, dataWithImagePath ,200, [{ pagination: { currentPage: page, perPage, totalCount } }]);
+  successResponse(res, dataWithImagePath ,200, [req.query.notPagenated != '1' &&{ pagination: { currentPage: page, perPage, totalCount } }]);
 });
 
 

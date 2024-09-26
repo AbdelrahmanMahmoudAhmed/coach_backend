@@ -1,6 +1,7 @@
 // controllers
 const { getAllQuickAnswer,addQuickAnswer, deleteQuickAnswer , updateQuickAnswer } = require('../../controller/quickAnswers')
 const { getAllTransformations, addTransformation, updateTransformation,deleteTransformation } = require('../../controller/transformation')
+const { getAllTestimonials, addTestimonial, updateTestimonial,deleteTestimonial } = require('../../controller/testimonials')
 const { getAllSections, addSections, updateSections,deleteSections } = require('../../controller/sections')
 const {getCertification, getAllCertifications  , deleteCertifications , updateCertifications, addCertifications  } = require('../../controller/certifications')
 const { getPackage , getSinglePackage , deletePackage , updatePackage, addPackage  } = require('../../controller/packages')
@@ -14,6 +15,7 @@ const { getLayout , updateLayout } = require('../../controller/layout')
 // validation
 const {addQuickAnswerValidation , updateQuickAnswerValidation } = require('../../validation/quickAnswers');
 const {addTransformationValidation , updateTransformationValidation } = require('../../validation/transformation');
+const {addTestimonialValidation , updateTestimonialValidation } = require('../../validation/testimonials');
 const sectionValidation = require('../../validation/sections');
 const {addCertificationValidation , updateCertificationValidation } = require('../../validation/certifications');
 const {addPackageValidation , updatePackageValidation } = require('../../validation/packages');
@@ -45,7 +47,7 @@ router.patch('/quick-answers/:id', allowToManageWebsite(ADMIN) , updateQuickAnsw
 
 /* --------------------------------- TRANSFORMATION SECTION --------------------------------- */
 // GET  (/transformations) 
-router.get('/transformations' , addTransformationValidation, getAllTransformations);
+router.get('/transformations' , getAllTransformations);
 // POST  (/transformations) 
 router.post('/transformations',allowToManageWebsite(ADMIN), addTransformationValidation, addTransformation);
 // DELETE  (/transformations) 
@@ -53,6 +55,16 @@ router.delete('/transformations/:id', allowToManageWebsite(ADMIN) ,  deleteTrans
 // PATCH  (/transformations) 
 router.patch('/transformations/:id',allowToManageWebsite(ADMIN), updateTransformationValidation  ,updateTransformation);
 
+
+/* --------------------------------- TESTIMONIALS SECTION --------------------------------- */
+// GET  (/testimonials) 
+router.get('/testimonials', getAllTestimonials);
+// POST  (/testimonials) 
+router.post('/testimonials',allowToManageWebsite(ADMIN), addTestimonialValidation, addTestimonial);
+// DELETE  (/testimonials) 
+router.delete('/testimonials/:id', allowToManageWebsite(ADMIN) ,  deleteTestimonial);
+// PATCH  (/testimonials) 
+router.patch('/testimonials/:id',allowToManageWebsite(ADMIN), updateTestimonialValidation  ,updateTestimonial);
 /* --------------------------------- SECTIONS SECTION --------------------------------- */
 // GET  (/sections) 
 router.get('/sections' , getAllSections);

@@ -17,28 +17,28 @@ const handelGettingData = async (req, res, next) => {
                     if (item.key == 'termsAr') termsData.termsAr = item.value
                     if (item.key == 'termsEn') termsData.termsEn = item.value
                 })
-                successResponse(res, termsData);
+                return   successResponse(res, termsData);
             case "policy":
                 let policyData = {}
                 data.forEach((item) => {
                     if (item.key == 'policyAr') policyData.policyAr = item.value
                     if (item.key == 'policyEn') policyData.policyEn = item.value
                 })
-                successResponse(res, policyData);
+                return successResponse(res, policyData);
             case "about":
                 let aboutData = {}
                 data.forEach((item) => {
                     if (item.key == 'aboutAr') aboutData.aboutAr = item.value
                     if (item.key == 'aboutEn') aboutData.aboutEn = item.value
                 })
-                successResponse(res, aboutData);
+                return successResponse(res, aboutData);
                 case "contact":
                     let contactData = {}
                     data.forEach((item) => {
                         if (item.key == 'contactContentAr') contactData.contactContentAr = item.value
                         if (item.key == 'contactContentEn') contactData.contactContentEn = item.value
                     })
-                    successResponse(res, contactData);
+                    return  successResponse(res, contactData);
             case "home":
                 let homeData = {}
                 data.forEach((item) => {
@@ -49,7 +49,7 @@ const handelGettingData = async (req, res, next) => {
                     if (item.key == 'aboutAr') homeData.aboutAr = item.value
                     if (item.key == 'aboutEn') homeData.aboutEn = item.value
                 })
-                successResponse(res, homeData);
+                return  successResponse(res, homeData);
                 case "layout":
                     let layoutData = {}
                     data.forEach((item) => {
@@ -67,7 +67,7 @@ const handelGettingData = async (req, res, next) => {
                         if (item.key == 'youtube') layoutData.youtube = item.value
                         if (item.key == 'whatsApp') layoutData.whatsApp = item.value
                     })
-                    successResponse(res, layoutData);
+                    return  successResponse(res, layoutData);
             default:
 
         }
@@ -99,7 +99,7 @@ const handelGettingData = async (req, res, next) => {
     }
 
     )
-    successResponse(res, layoutData);
+   return successResponse(res, layoutData);
 }
 
 

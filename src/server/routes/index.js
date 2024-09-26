@@ -6,6 +6,7 @@ const { isAuth } = require("../middleware/isAuth");
 // routes
 const quickAnswers = require("./quickAnswers");
 const transformations = require("./transformation");
+const testimonials = require("./testimonials");
 const packages = require("./packages");
 const products = require("./products");
 const sections = require("./sections");
@@ -33,6 +34,7 @@ const setupApiRouters = (app) => {
   /* ------------------------------- WEBSITE DATA ------------------------------- */
   router.use("/quick-answers", quickAnswers);
   router.use("/transformations", transformations);
+  router.use("/testimonials", testimonials);
   router.use("/products", products);
   router.use("/packages", packages);
   router.use("/sections", sections);
