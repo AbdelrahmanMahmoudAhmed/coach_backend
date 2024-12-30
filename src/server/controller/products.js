@@ -22,6 +22,9 @@ const getProducts = controllerWrapper(async (req, res, next) => {
   const page = req.query.page && !isNaN(+req.query.page) ? +req.query.page : 1;
   const perPage = 10;
   const offset = (page - 1) * perPage;
+  const hasPagenation = req.query.notPagenated == '1'
+
+
   const searchTerm = req.query.search || "";
   const totalCount = await Product.count({
     include: {
@@ -50,8 +53,8 @@ const getProducts = controllerWrapper(async (req, res, next) => {
         },
       },
     ],
-    limit: perPage,
-    offset,
+    limit: hasPagenation ? null :  perPage,
+    offset:hasPagenation ? null :  offset,
 
   });
   console.log("data" , data)
@@ -68,7 +71,7 @@ const getProducts = controllerWrapper(async (req, res, next) => {
   });
 
   successResponse(res, manipulatedData, 200, [
-    { pagination: { currentPage: page, perPage, totalCount } },
+    !hasPagenation &&   {...{  pagination: { currentPage: page, perPage, totalCount } }},
   ]);
 });
 
