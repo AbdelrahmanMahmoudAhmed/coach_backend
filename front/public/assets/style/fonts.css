@@ -1,0 +1,63 @@
+
+
+
+/* Inter */
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-ExtraLight.ttf) format('woff');
+    font-weight: 200;
+    font-style: lighter;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-Light.ttf) format('woff');
+    font-weight: 300;
+    font-style: light;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-Regular.ttf) format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-Regular.ttf) format('woff');
+    font-weight: 500;
+    font-style: medium;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-Medium.ttf) format('woff');
+    font-weight: 600;
+    font-style: bold;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_28pt-SemiBold.ttf) format('woff');
+    font-weight: 700;
+    font-style: bold;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_24pt-Bold.ttf) format('woff');
+    font-weight: 800;
+    font-style: bolder;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter_18pt-ExtraBold.ttf) format('woff');
+    font-weight: 900;
+    font-style: bolder;
+    font-display: swap;
+}

@@ -1,0 +1,18 @@
+
+.content-l {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: all 700ms;
+    
+}
+
+.content-r {
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 700ms;
+}
+
+.to-place .content {
+    opacity: 1;
+    transform: translateX(0%) !important;
+}

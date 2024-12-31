@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+ *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+ }
+
+:root{
+    --header-height: 72px;
+    --footer-height: 371px;
+    --pages-padding:95.38px;
+    --primary-color: #FF6B00;
+    --secondary-color: #3a73ef;
+
+    /* in case of header not fixed use this calc(100vh -var(--main-header-height) - var(--main-footer-height)); */
+  
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body{
+    color: #131313;
+  
+  }
+  body.dark{
+    color: #fff;
+  }
+  
+@layer components {
+  .app-container {
+    @apply px-5 lg:px-[100px] xl:px-[150px] 2xl:px-[180px] 3xl:px-[325px] mx-auto;
+  }
+  .panel-container {
+    @apply px-2 md:px-6 mx-auto;
+}
+  .general-p {
+    @apply text-[#131313] leading-custom text-[14px] md:text-[16px] dark:text-white 
+  }
+  .active-service-btn{
+    @apply text-white bg-primary lg:text-primary lg:bg-transparent lg:relative before:lg:absolute before:w-full before:h-[1px] before:bottom-[-17px] before:left-0 before:bg-primary
+  }
+  .app-bg{
+    @apply bg-light-bg dark:bg-dark-bg;
+  }
+  .header-bg{
+    @apply   bg-[#ffffffc5] dark:bg-[#000000ce] backdrop-blur-sm;
+  }
+  .footer-bg {
+    @apply  bg-[#1C1C1C] text-white ;
+
+  }
+
+  .input-style{
+    @apply w-full appearance-none rounded-[8px] border bg-transparent border-[#DDDDDD] h-[56px] px-3 py-2 text-[18px] outline-none focus:border-primary dark:focus:border-primary dark:border-[#565656]  ;
+  }
+  .input-err{
+    @apply flex items-center gap-1 text-[clamp(.5rem,_100%,_0.875rem)] font-semibold text-red-600 ;
+  }
+
+
+
+  /* body{
+        @apply bg-white dark:bg-slate-600
+    } */
+}
+
+@layer base {
+  body {
+    /* font-family: "REM", Helvetica, sans-serif; */
+    font-family: "Inter", Helvetica, sans-serif;
+    /* font-family: "RB", Helvetica, sans-serif; */
+    
+  }
+  /* body[dir=rtl]{
+    font-family: "RB" Helvetica, sans-serif;
+  } */
+}
+
+
+
+
+
+
+
+/* ---------- start SCROLLBAR STYLE --------- */
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+ ::-webkit-scrollbar-track {
+  background: #bcb9b9;
+}
+
+/* Handle */
+ ::-webkit-scrollbar-thumb {
+  background: #FF6B00;
+  border-radius: 30px;
+}
+
+/* Handle on hover */
+ ::-webkit-scrollbar-thumb:hover {
+  background: #5d490b;
+}
+/* ---------- END SCROLLBAR STYLE --------- */
+
+
+/* start about section  */
+#about.about-content div > h3,
+#about.about-content div > p {
+  opacity: 1 !important;
+}
+/* end about section  */
+
+::selection {
+  color: #fff;
+  background-color: #FF6B00;
+}
+
+
+
+
+
+/* home page style ( services section )  */
+
+.service-card .hovered{
+  display: none;
+}
+.service-card:hover p,
+.service-card:hover h5,
+.service-card:hover span {
+  color: white !important;
+}
+
+.service-card:hover .hovered{
+  display: block;
+}
+.service-card:hover .normal{
+  display: none;
+}
+
+
+
+/* table style */
+.first-child,
+.first-child {
+  border-top-right-radius: 8px;
+  /* border-bottom-right-radius: 5px; */
+  /* overflow: hidden; */
+}
+.last-child,
+.last-child {
+  border-top-left-radius: 8px;
+  /* border-bottom-left-radius: 5px; */
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+/* input[type="number"] {
+    -moz-appearance: textfield;
+  } */
+
+  .row:hover > td {
+    border-color: #f3b602;
+  }
+
+
+
+
+@import url(./fonts.css);
+@import url(./swiper.css);
+@import url(./project-slider.css);
+@import url(./our-services.css);

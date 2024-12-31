@@ -1,0 +1,89 @@
+/* Custom Navigation Buttons */
+@import url(../../../node_modules/swiper/swiper-bundle.min.css);
+/* 
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination'; 
+*/
+
+.custom-prev-button,
+.custom-next-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.custom-prev-button {
+  left: 10px;
+}
+
+.custom-next-button {
+  right: 10px;
+}
+
+/* Custom Pagination Bullets */
+.custom-pagination {
+  text-align: center;
+  position: absolute;
+  bottom: 0px ;
+  width: 100%;
+  z-index: 10;
+}
+@media (min-width: 600px) {
+  .custom-pagination {
+    bottom: 30px !important ;
+  }
+}
+
+.custom-bullet {
+  display: inline-block;
+  margin: 0 5px;
+  width: 12px ;
+  height: 12px ;
+  background-color: #3a73ef ;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.custom-bullet.swiper-pagination-bullet-active {
+    background-color: #3a73ef ;
+  }
+.dark .custom-bullet {
+
+    background-color: #f3b602 ;
+
+  }
+  
+
+  
+
+.dark .custom-bullet.swiper-pagination-bullet-active {
+  background-color: #f3b602 ;
+}
+
+/* .custom-bullet {
+    display: inline-block;
+    margin: 0 5px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .custom-bullet.swiper-pagination-bullet-active {
+    background-color: var(--primary-color);
+  } */
+
+
+
+  
+  

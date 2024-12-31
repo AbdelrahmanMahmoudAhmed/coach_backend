@@ -1,0 +1,67 @@
+
+/* ----------- Start services' slider --------------- */
+
+
+
+@keyframes services-ar {
+    /* from {
+      transform: translateX(0);
+    }
+    to{
+      transform: translateX(100%);
+  
+    } */
+    0%   { transform: translateX(0);}
+    40%  {transform: translateX(100%);}
+    50%  {transform: translateX(100%);}
+    90%  { transform: translateX(0);}
+    100% { transform: translateX(0);}
+  }
+  
+  @keyframes services-en {
+    /* from {
+      transform: translateX(0);
+    }
+    to{
+      transform: translateX(-100%);
+  
+    } */
+    0%   { transform: translateX(0);}
+    40%  {transform: translateX(-100%);}
+    50%  {transform: translateX(-100%);}
+    90%  { transform: translateX(0);}
+    100% { transform: translateX(0);}
+  }
+  
+  .project-silder-holder{
+    position: relative;
+  }
+  .project-silder-holder::before,
+  .project-silder-holder::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 180px;
+    height: 100%;
+    z-index: 2;
+  }
+  
+
+  .project-silder-holder:hover .project-slider{
+    animation-play-state: paused;
+  }
+
+  @media (min-width: 640px) {
+    .project-slider-en {
+      animation: 40s services-en infinite linear;
+    }
+    
+    .project-slider-ar {
+      animation: 40s services-ar infinite linear;
+    }
+  }
+
+
+  
+  
+  /* ----------- End services' slider --------------- */
